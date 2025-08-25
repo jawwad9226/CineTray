@@ -1,13 +1,34 @@
 {
   "name": "CineTray",
   "short_name": "CineTray",
-  "start_url": "./",
+  "description": "Track and manage your movie and TV show watchlist",
+  "start_url": "/?source=pwa",
   "scope": "/",
   "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "browser"],
+  "orientation": "portrait",
+  "lang": "en-US",
+  "dir": "ltr",
+  "prefer_related_applications": false,
   "background_color": "#ffffff",
   "theme_color": "#6366f1",
-  "description": "A simple movie and TV show watchlist manager",
-  "orientation": "portrait",
+  "categories": ["entertainment", "movies", "tv", "productivity"],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Add New Movie",
+      "short_name": "Add Movie",
+      "description": "Add a new movie to your watchlist",
+      "url": "/add?source=pwa",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "View Watchlist",
+      "short_name": "Watchlist",
+      "description": "View your watchlist",
+      "url": "/watchlist?source=pwa"
+    }
+  ],
   "icons": [
     {
       "src": "icon-192.png",
@@ -20,6 +41,34 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
-  ]
+  ],
+  "related_applications": [],
+  "protocol_handlers": [],
+  "file_handlers": [],
+  "share_target": {
+    "action": "/share",
+    "method": "GET",
+    "enctype": "application/x-www-form-urlencoded",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  },
+  "edge_side_panel": {
+    "preferred_width": 480
+  },
+  "launch_handler": {
+    "route_to": "existing-client",
+    "navigate_existing_client": "always"
+  },
+  "handle_links": "preferred",
+  "id": "/?source=pwa"
 }
