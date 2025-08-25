@@ -1,140 +1,688 @@
-<!DOCTYPE html>
+<!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#6366f1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="CineTray">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="CineTray">
+    <meta name="msapplication-TileColor" content="#6366f1">
+    <meta name="msapplication-tap-highlight" content="no">
+    
+    <!-- TWA (Trusted Web Activity) Meta Tags -->
+    <meta name="google-play-app" content="app-id=com.cinetray.watchlist">
+    <meta name="mobile-web-app-title" content="CineTray">
+    <meta name="mobile-web-app-status-bar-style" content="default">
+    
+    <!-- Android Chrome TWA -->
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#6366f1">
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#4f46e5">
+    
+    <!-- PWA Icons - Simple Canvas Generated -->
+    <link rel="icon" sizes="192x192" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAN1wAADdcBQiibeAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAASFSURBVHic7d1NbxJBFAbgd2Zmd2YpHwVKCyK01rQ2JjZNjDHGaGNi/P8/wJPeNPHgwYMHD3ryYGKMsY01TSxJrQRaKLTAFpaZ2dl5PR2BEpAy782TZWfmfWcGkVIKY8y5ZNs9AGPaYAFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsH0PcF7EJgS9IQAAAABJRU5ErkJggg==">
+    <link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAN1wAADdcBQiibeAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAASFSURBVHic7d1NbxJBFAbgd2Zmd2YpHwVKCyK01rQ2JjZNjDHGaGNi/P8/wJPeNPHgwYMHD3ryYGKMsY01TSxJrQRaKLTAFpaZ2dl5PR2BEpAy782TZWfmfWcGkVIKY8y5ZNs9AGPaYAFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsH0PcF7EJgS9IQAAAABJRU5ErkJggg==">XL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYs<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CineTray - Your Personal Watchlist</title>
-
-    <!-- PWA meta -->
-    <meta name="theme-color" content="#6366f1" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <meta name="apple-mobile-web-app-title" content="CineTray" />
-    <meta name="application-name" content="CineTray" />
-    <meta name="google-play-app" content="app-id=com.cinetray.watchlist" />
-
-    <!-- External manifest (create manifest.json in repo root) -->
-    <link rel="manifest" href="manifest.json" />
-
-    <!-- Icons (place icon files in repo root: icon-192.png, icon-512.png) -->
-    <link rel="icon" href="icon-192.png" sizes="192x192" />
-    <link rel="apple-touch-icon" href="icon-192.png" />
-
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#6366f1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="CineTray">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="CineTray">
+    <meta name="msapplication-TileColor" content="#6366f1">
+    <meta name="msapplication-tap-highlight" content="no">
+    
+    <!-- PWA Icons -->
+    <link rel="icon" type="image/png" sizes="192x192" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%236366f1'/><text y='70' font-size='60' text-anchor='middle' x='50' fill='white'>🎬</text></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%236366f1'/><text y='70' font-size='60' text-anchor='middle' x='50' fill='white'>🎬</text></svg>">
+    
+    <!-- PWA Manifest - Simplified -->
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkNpbmVUcmF5IC0gUGVyc29uYWwgV2F0Y2hsaXN0IiwKICAic2hvcnRfbmFtZSI6ICJDaW5lVHJheSIsCiAgImRlc2NyaXB0aW9uIjogIk1hbmFnZSB5b3VyIG1vdmllcyBhbmQgc2VyaWVzIHdhdGNobGlzdCIsCiAgInN0YXJ0X3VybCI6ICIuLyIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiI2ZmZmZmZiIsCiAgInRoZW1lX2NvbG9yIjogIiM2MzY2ZjEiLAogICJvcmllbnRhdGlvbiI6ICJwb3J0cmFpdCIsCiAgInNjb3BlIjogIi4vIiwKICAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAiZGF0YTppbWFnZS9zdmcreG1sLDxzdmcgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyB2aWV3Qm94PScwIDAgMTAwIDEwMCc+PHJlY3Qgd2lkdGg9JzEwMCcgaGVpZ2h0PScxMDAnIGZpbGw9JyU0ZjQ2ZTUnLz48dGV4dCB5PSc3MScgZm9udC1zaXplPSc1MCcgdGV4dC1hbmNob3I9J21pZGRsZScgeD0nNTAnIGZpbGw9J3doaXRlJz7wn46sPC90ZXh0Pjwvc3ZnPiIsCiAgICAgICJzaXplcyI6ICIxOTJ4MTkyIiwKICAICAgInR5cGUiOiAiaW1hZ2Uvc3ZnK3htbCIKICAgIH0sCiAgICB7CiAgICAgICJzcmMiOiAiZGF0YTppbWFnZS9zdmcreG1sLDxzdmcgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyB2aWV3Qm94PScwIDAgMTAwIDEwMCc+PHJlY3Qgd2lkdGg9JzEwMCcgaGVpZ2h0PScxMDAnIGZpbGw9JyU0ZjQ2ZTUnLz48dGV4dCB5PSc3MScgZm9udC1zaXplPSc1MCcgdGV4dC1hbmNob3I9J21pZGRsZScgeD0nNTAnIGZpbGw9J3doaXRlJz7wn46sPC90ZXh0Pjwvc3ZnPiIsCiAgICAgICJzaXplcyI6ICI1MTJ4NTEyIiwKICAgICAgInR5cGUiOiAiaW1hZ2Uvc3ZnK3htbCIsCiAgICAgICJwdXJwb3NlIjogImFueSBtYXNrYWJsZSIKICAgIH0KICBdLAogICJjYXRlZ29yaWVzIjogWyJlbnRlcnRhaW5tZW50IiwgInByb2R1Y3Rpdml0eSJdCn0=">;purpose&quot;:&quot;maskable&quot;}],&quot;categories&quot;:[&quot;entertainment&quot;,&quot;productivity&quot;]}">
+    
     <style>
-        /* Cleaned CSS - removed broken @font-face that used empty base64 */
-        * { box-sizing: border-box; margin: 0; padding: 0; transition: background-color .25s ease, color .25s ease, border-color .25s ease; }
+        /* Font Awesome Icons - Inline to avoid CORS issues */
+        @font-face {
+            font-family: 'FontAwesome';
+            src: url('data:font/woff2;base64,') format('woff2');
+        }
+        
+        .fa, .fas, .far, .fal, .fab {
+            font-family: 'FontAwesome', sans-serif;
+            font-weight: normal;
+            font-style: normal;
+            display: inline-block;
+        }
+        
+        .fa-film::before { content: "🎬"; }
+        .fa-moon::before { content: "🌙"; }
+        .fa-sun::before { content: "☀️"; }
+        .fa-plus::before { content: "+"; }
+        .fa-eye::before { content: "👁️"; }
+        .fa-undo::before { content: "↶"; }
+        .fa-trash::before { content: "🗑️"; }
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         :root {
             --primary: #6366f1;
             --primary-dark: #4f46e5;
-            --bg: #ffffff;
-            --bg-secondary: #f8fafc;
+            --secondary: #f1f5f9;
             --text: #0f172a;
             --text-muted: #64748b;
             --border: #e2e8f0;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg: #ffffff;
+            --bg-secondary: #f8fafc;
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
+
         [data-theme="dark"] {
             --primary: #818cf8;
             --primary-dark: #6366f1;
-            --bg: #0f172a;
-            --bg-secondary: #1e293b;
+            --secondary: #1e293b;
             --text: #f1f5f9;
             --text-muted: #94a3b8;
             --border: #334155;
+            --bg: #0f172a;
+            --bg-secondary: #1e293b;
         }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial; background: var(--bg); color: var(--text); line-height: 1.6; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 1rem; }
-        .header { background: linear-gradient(135deg,var(--primary) 0%,var(--primary-dark) 100%); color: white; padding: 2rem 0; margin-bottom: 2rem; border-radius: 0 0 1rem 1rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
-        .header-content { display:flex; justify-content:space-between; align-items:center; gap:1rem; max-width:1200px; margin:0 auto; padding:0 1rem; }
-        .logo { display:flex; align-items:center; gap:.75rem; font-weight:800; font-size:1.6rem; background:linear-gradient(45deg,#fff,#e0e7ff); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
-        .theme-toggle { background: rgba(255,255,255,0.15); border:2px solid rgba(255,255,255,0.2); color:white; padding:.6rem; border-radius:12px; cursor:pointer; font-size:1.1rem; }
-        .stats { display:grid; grid-template-columns: 1fr 1fr 1fr; gap:.75rem; margin-bottom:1.5rem; }
-        .stat-card { background: var(--bg-secondary); padding:1rem; border-radius:12px; border:1px solid var(--border); text-align:center; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
-        .stat-number { font-size:1.5rem; font-weight:700; color:var(--primary); display:block; }
-        .controls { background:var(--bg-secondary); padding:1.5rem; border-radius:.75rem; margin-bottom:2rem; border:1px solid var(--border); }
-        .input-group { display:flex; gap:.75rem; margin-bottom:1rem; position:relative; }
-        .input-field { flex:1; padding:.9rem 1rem; border:2px solid var(--border); border-radius:12px; font-size:1rem; background:var(--bg); color:var(--text); }
-        .btn-add { padding:.85rem 1rem; border:none; border-radius:12px; background:var(--primary); color:white; cursor:pointer; font-weight:600; font-size:1.15rem; }
-        .filters { display:flex; gap:.5rem; flex-wrap:wrap; }
-        .filter-btn { padding:.6rem 1.2rem; border-radius:25px; border:2px solid var(--border); background:var(--bg); cursor:pointer; font-weight:600; }
-        .filter-btn.active { background:var(--primary); color:white; border-color:var(--primary); transform:scale(1.03); }
-        .watchlist { display:grid; gap:1rem; }
-        .watchlist-item { background:var(--bg-secondary); border:1px solid var(--border); border-radius:.75rem; padding:1.25rem; }
-        .item-title { font-size:1.15rem; font-weight:600; color:var(--primary); text-decoration:none; cursor:pointer; }
-        .item-meta { display:flex; gap:1rem; align-items:center; flex-wrap:wrap; color:var(--text-muted); font-size:.9rem; }
-        .status-badge { padding:.25rem .6rem; border-radius:999px; font-weight:700; font-size:.75rem; }
-        .status-watched { background:#10b981; color:#fff; }
-        .status-to-watch { background:#f59e0b; color:#fff; }
-        .item-actions { display:flex; gap:.5rem; }
-        .action-btn { padding:.5rem; border-radius:.375rem; min-width:2.5rem; height:2.5rem; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; }
-        .btn-watch { background:#10b981; color:white; }
-        .btn-unwatch { background:#f59e0b; color:white; }
-        .btn-delete { background:#ef4444; color:white; }
-        .notification { position:fixed; top:2rem; right:2rem; background:var(--primary); color:white; padding:1rem 1.5rem; border-radius:12px; transform:translateX(100%); transition:all .3s ease; z-index:1000; }
-        .notification.show { transform:translateX(0); }
-        .search-suggestions { position:absolute; top:calc(100% + 6px); left:0; right:0; background:var(--bg); border:1px solid var(--border); border-radius:6px; max-height:210px; overflow:auto; display:none; z-index:100; }
-        .suggestion-item { padding:.6rem .9rem; border-bottom:1px solid var(--border); cursor:pointer; }
-        .suggestion-item:last-child { border-bottom:none; }
 
-        @media (max-width:768px) {
-            .header { padding:1.25rem 0; margin-bottom:1rem; }
-            .logo { font-size:1.4rem; }
-            .stats { grid-template-columns: 1fr; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            border-radius: 0 0 1rem 1rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: linear-gradient(45deg, #ffffff, #e0e7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 2px 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .logo i {
+            font-size: 2.2rem;
+        }
+
+        .theme-toggle {
+            background: rgba(255, 255, 255, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.6rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-card {
+            background: var(--bg-secondary);
+            padding: 1rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            display: block;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        .controls {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .input-group {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .input-field {
+            flex: 1;
+            padding: 0.875rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-size: 1rem;
+            background: var(--bg);
+            color: var(--text);
+            transition: all 0.3s ease;
+        }
+
+        .btn-add {
+            padding: 0.875rem 1rem;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            background: var(--primary);
+            color: white;
+            min-width: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-add:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .btn {
+            padding: 0.875rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: var(--bg);
+            color: var(--text);
+            border: 2px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--secondary);
+        }
+
+        .filters {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .filter-btn {
+            padding: 0.6rem 1.2rem;
+            border: 2px solid var(--border);
+            background: var(--bg);
+            color: var(--text);
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        .search-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--bg);
+            border: 2px solid var(--border);
+            border-top: none;
+            border-radius: 0 0 0.5rem 0.5rem;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+        }
+
+        .suggestion-item {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .suggestion-item:hover {
+            background: var(--secondary);
+        }
+
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+
+        .watchlist {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .watchlist-item {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .watchlist-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .item-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .item-title:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+
+        .item-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .status-watched {
+            background: var(--success);
+            color: white;
+        }
+
+        .status-to-watch {
+            background: var(--warning);
+            color: white;
+        }
+
+        .date-added {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .item-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 0.5rem;
+            border: none;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            min-width: 2.5rem;
+            height: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-watch {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-unwatch {
+            background: var(--warning);
+            color: white;
+        }
+
+        .btn-delete {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-edit {
+            background: var(--primary);
+            color: white;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.1);
+            box-shadow: var(--shadow);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-muted);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .bulk-actions {
+            display: none;
+        }
+
+        .notification {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: var(--primary);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            z-index: 1000;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.error {
+            background: var(--danger);
+        }
+
+        .checkbox {
+            width: 1.2rem;
+            height: 1.2rem;
+            margin-right: 0.5rem;
+        }
+
+        .position-relative {
+            position: relative;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0.5rem;
+            }
+
+            .header {
+                margin-bottom: 1rem;
+                padding: 1.5rem 0;
+            }
+
+            .logo {
+                font-size: 2rem;
+            }
+
+            .stats {
+                gap: 0.5rem;
+            }
+
+            .stat-card {
+                padding: 0.75rem;
+            }
+
+            .stat-number {
+                font-size: 1.25rem;
+            }
+
+            .item-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.75rem;
+            }
+
+            .item-title {
+                font-size: 1.1rem;
+            }
+
+            .item-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+
+            .notification {
+                top: 1rem;
+                right: 1rem;
+                left: 1rem;
+                right: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats {
+                gap: 0.4rem;
+            }
+
+            .controls {
+                padding: 1rem;
+            }
+
+            .watchlist-item {
+                padding: 1rem;
+            }
+        }
+
+        /* Loading animation */
+        .loading {
+            display: inline-block;
+            width: 1rem;
+            height: 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* PWA specific styles */
+        @media (display-mode: standalone) {
+            body {
+                padding-top: env(safe-area-inset-top);
+                padding-bottom: env(safe-area-inset-bottom);
+            }
+            
+            .header {
+                padding-top: calc(env(safe-area-inset-top) + 1rem);
+            }
+        }
+
+        /* Prevent text selection on buttons for better mobile feel */
+        .btn, .filter-btn, .action-btn, .theme-toggle {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Smooth transitions for theme switching */
+        * {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
         }
     </style>
 </head>
 <body>
-    <header class="header">
-        <div class="header-content">
-            <div class="logo"><span style="font-size:1.4rem;">🎬</span> CineTray</div>
-            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">🌙</button>
+    <div class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-film"></i>
+                    CineTray
+                </div>
+                <button class="theme-toggle" onclick="toggleTheme()">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
         </div>
-    </header>
+    </div>
 
-    <main class="container">
-        <section class="stats">
+    <div class="container">
+        <div class="stats">
             <div class="stat-card">
                 <span class="stat-number" id="totalCount">0</span>
-                <div>Total Items</div>
+                <span class="stat-label">Total Items</span>
             </div>
             <div class="stat-card">
                 <span class="stat-number" id="watchedCount">0</span>
-                <div>Watched</div>
+                <span class="stat-label">Watched</span>
             </div>
             <div class="stat-card">
                 <span class="stat-number" id="toWatchCount">0</span>
-                <div>To Watch</div>
+                <span class="stat-label">To Watch</span>
             </div>
-        </section>
+        </div>
 
-        <section class="controls">
+        <div class="controls">
             <div class="input-group">
-                <input id="titleInput" class="input-field" placeholder="Enter movie or series title..." autocomplete="off" aria-label="Title">
-                <div id="suggestions" class="search-suggestions" role="listbox" aria-hidden="true"></div>
-                <button id="addBtn" class="btn-add" title="Add">+</button>
+                <div class="position-relative" style="flex: 1;">
+                    <input type="text" id="titleInput" class="input-field" placeholder="Enter movie or series title..." autocomplete="off">
+                    <div class="search-suggestions" id="suggestions"></div>
+                </div>
+                <button class="btn-add" onclick="addItem()">
+                    <i class="fas fa-plus"></i>
+                </button>
             </div>
-
-            <div class="filters" role="tablist" aria-label="Filters">
-                <button class="filter-btn active" data-filter="all" role="tab">All</button>
-                <button class="filter-btn" data-filter="to-watch" role="tab">To Watch</button>
-                <button class="filter-btn" data-filter="watched" role="tab">Watched</button>
+            
+            <div class="filters">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="to-watch">To Watch</button>
+                <button class="filter-btn" data-filter="watched">Watched</button>
             </div>
-        </section>
+        </div>
 
-        <section id="watchlist" class="watchlist" aria-live="polite">
-            <div class="watchlist-item empty-state">
-                <div style="font-weight:600; color:var(--text-muted)">Your watchlist is empty</div>
-                <div style="color:var(--text-muted)">Start adding movies and series to keep track of what you want to watch!</div>
+        <div class="bulk-actions" id="bulkActions">
+            <!-- Bulk actions removed as requested -->
+        </div>
+
+        <div class="watchlist" id="watchlist">
+            <div class="empty-state">
+                <i class="fas fa-film"></i>
+                <h3>Your watchlist is empty</h3>
+                <p>Start adding movies and series to keep track of what you want to watch!</p>
             </div>
-        </section>
-    </main>
+        </div>
+    </div>
 
-    <div id="notification" class="notification" role="status" aria-live="polite"></div>
+    <div class="notification" id="notification"></div>
 
     <script>
-        // --- App state & data
+        // Remove all bulk-related functions and variables
         let watchlist = JSON.parse(localStorage.getItem('cinetray-watchlist') || '[]');
         let currentFilter = 'all';
 
+        // Sample movie titles for suggestions
         const sampleMovies = [
             "The Shawshank Redemption", "The Godfather", "The Dark Knight", "Pulp Fiction",
             "The Lord of the Rings", "Forrest Gump", "Inception", "Fight Club",
@@ -144,7 +692,6 @@
             "Avengers: Endgame", "Titanic", "Avatar", "Black Panther", "Spider-Man: Into the Spider-Verse"
         ];
 
-        // --- Helpers
         function saveData() {
             localStorage.setItem('cinetray-watchlist', JSON.stringify(watchlist));
             updateStats();
@@ -153,196 +700,447 @@
 
         function updateStats() {
             const total = watchlist.length;
-            const watched = watchlist.filter(i => i.status === 'watched').length;
+            const watched = watchlist.filter(item => item.status === 'watched').length;
             const toWatch = total - watched;
+
             document.getElementById('totalCount').textContent = total;
             document.getElementById('watchedCount').textContent = watched;
             document.getElementById('toWatchCount').textContent = toWatch;
         }
 
-        function showNotification(msg) {
-            const n = document.getElementById('notification');
-            n.textContent = msg;
-            n.classList.add('show');
-            setTimeout(() => n.classList.remove('show'), 3000);
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification show`;
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
         }
 
         function generateId() {
-            return Date.now().toString(36) + Math.random().toString(36).slice(2);
+            return Date.now().toString(36) + Math.random().toString(36).substr(2);
         }
 
-        // --- CRUD
         function addItem() {
-            const input = document.getElementById('titleInput');
-            const title = input.value.trim();
-            if (!title) { showNotification('Please enter a title'); return; }
-            if (watchlist.some(i => i.title.toLowerCase() === title.toLowerCase())) {
+            const titleInput = document.getElementById('titleInput');
+            const title = titleInput.value.trim();
+
+            if (!title) {
+                showNotification('Please enter a title');
+                return;
+            }
+
+            // Check for duplicates
+            const exists = watchlist.find(item => 
+                item.title.toLowerCase() === title.toLowerCase()
+            );
+
+            if (exists) {
                 showNotification('This title already exists in your watchlist');
                 return;
             }
-            const item = { id: generateId(), title, status: 'to-watch', dateAdded: new Date().toLocaleDateString(), dateWatched: null };
-            watchlist.unshift(item);
-            input.value = '';
-            hideSuggestions();
+
+            const newItem = {
+                id: generateId(),
+                title: title,
+                status: 'to-watch',
+                dateAdded: new Date().toLocaleDateString(),
+                dateWatched: null
+            };
+
+            watchlist.unshift(newItem);
+            titleInput.value = '';
+            hidesuggestions();
             saveData();
             showNotification(`"${title}" added to your watchlist!`);
         }
 
         function deleteItem(id) {
-            const item = watchlist.find(i => i.id === id);
-            if (!item) return;
-            if (!confirm(`Remove "${item.title}"?`)) return;
-            watchlist = watchlist.filter(i => i.id !== id);
-            saveData();
-            showNotification(`"${item.title}" removed`);
+            if (confirm('Are you sure you want to remove this item?')) {
+                const item = watchlist.find(item => item.id === id);
+                watchlist = watchlist.filter(item => item.id !== id);
+                saveData();
+                showNotification(`"${item.title}" removed from watchlist`);
+            }
         }
 
         function toggleStatus(id) {
-            const it = watchlist.find(i => i.id === id);
-            if (!it) return;
-            if (it.status === 'watched') { it.status = 'to-watch'; it.dateWatched = null; showNotification(`"${it.title}" marked to watch`); }
-            else { it.status = 'watched'; it.dateWatched = new Date().toLocaleDateString(); showNotification(`"${it.title}" marked watched`); }
-            saveData();
+            const item = watchlist.find(item => item.id === id);
+            if (item) {
+                if (item.status === 'watched') {
+                    item.status = 'to-watch';
+                    item.dateWatched = null;
+                    showNotification(`"${item.title}" marked as to watch`);
+                } else {
+                    item.status = 'watched';
+                    item.dateWatched = new Date().toLocaleDateString();
+                    showNotification(`"${item.title}" marked as watched!`);
+                }
+                saveData();
+            }
         }
 
         function openGoogleSearch(title) {
-            const url = `https://www.google.com/search?q=${encodeURIComponent(title + ' movie')}`;
-            window.open(url, '_blank', 'noopener');
+            const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(title + ' movie')}`;
+            window.open(searchUrl, '_blank');
         }
 
-        // --- Render
         function renderWatchlist() {
-            const el = document.getElementById('watchlist');
-            let items = watchlist.slice();
-            if (currentFilter === 'watched') items = items.filter(i => i.status === 'watched');
-            if (currentFilter === 'to-watch') items = items.filter(i => i.status === 'to-watch');
+            const watchlistEl = document.getElementById('watchlist');
+            let filteredItems = watchlist;
 
-            items.sort((a, b) => {
+            if (currentFilter === 'watched') {
+                filteredItems = watchlist.filter(item => item.status === 'watched');
+            } else if (currentFilter === 'to-watch') {
+                filteredItems = watchlist.filter(item => item.status === 'to-watch');
+            }
+
+            // Sort: to-watch items first, then by date added (newest first)
+            filteredItems.sort((a, b) => {
                 if (a.status === 'to-watch' && b.status === 'watched') return -1;
                 if (a.status === 'watched' && b.status === 'to-watch') return 1;
-                // dateAdded is localized string; fallback to position if parse fails
-                const da = Date.parse(a.dateAdded) || 0;
-                const db = Date.parse(b.dateAdded) || 0;
-                return db - da;
+                return new Date(b.dateAdded) - new Date(a.dateAdded);
             });
 
-            if (items.length === 0) {
-                el.innerHTML = `<div class="watchlist-item"><div style="font-weight:600; color:var(--text-muted)">No items found</div></div>`;
+            if (filteredItems.length === 0) {
+                watchlistEl.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-film"></i>
+                        <h3>No items found</h3>
+                        <p>${currentFilter === 'all' ? 'Your watchlist is empty' : `No ${currentFilter.replace('-', ' ')} items`}</p>
+                    </div>
+                `;
                 return;
             }
 
-            el.innerHTML = items.map(item => `
-                <div class="watchlist-item" role="article" aria-label="${escapeHtml(item.title)}">
-                    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;">
-                        <div style="flex:1;">
-                            <a href="#" class="item-title" onclick="event.preventDefault(); openGoogleSearch('${escapeForJs(item.title)}')">${escapeHtml(item.title)}</a>
+            watchlistEl.innerHTML = filteredItems.map(item => `
+                <div class="watchlist-item">
+                    <div class="item-header">
+                        <div style="flex: 1;">
+                            <a href="#" class="item-title" onclick="event.preventDefault(); openGoogleSearch('${item.title.replace(/'/g, "\\'")}')">
+                                ${item.title}
+                            </a>
                             <div class="item-meta">
-                                <span class="status-badge ${item.status === 'watched' ? 'status-watched' : 'status-to-watch'}">${item.status === 'watched' ? 'Watched' : 'To Watch'}</span>
-                                <span class="date-added">Added: ${escapeHtml(item.dateAdded || '')}</span>
-                                ${item.dateWatched ? `<span class="date-added">Watched: ${escapeHtml(item.dateWatched)}</span>` : ''}
+                                <span class="status-badge ${item.status === 'watched' ? 'status-watched' : 'status-to-watch'}">
+                                    ${item.status === 'watched' ? 'Watched' : 'To Watch'}
+                                </span>
+                                <span class="date-added">
+                                    Added: ${item.dateAdded}
+                                </span>
+                                ${item.dateWatched ? `<span class="date-added">Watched: ${item.dateWatched}</span>` : ''}
                             </div>
                         </div>
                         <div class="item-actions">
-                            <button class="action-btn ${item.status === 'watched' ? 'btn-unwatch' : 'btn-watch'}" onclick="toggleStatus('${item.id}')" title="${item.status === 'watched' ? 'Mark as To Watch' : 'Mark as Watched'}">
-                                ${item.status === 'watched' ? '↶' : '👁️'}
+                            <button class="action-btn ${item.status === 'watched' ? 'btn-unwatch' : 'btn-watch'}" 
+                                    onclick="toggleStatus('${item.id}')" 
+                                    title="${item.status === 'watched' ? 'Mark as To Watch' : 'Mark as Watched'}">
+                                <i class="fas ${item.status === 'watched' ? 'fa-undo' : 'fa-eye'}"></i>
                             </button>
-                            <button class="action-btn btn-delete" onclick="deleteItem('${item.id}')" title="Delete">🗑️</button>
+                            <button class="action-btn btn-delete" onclick="deleteItem('${item.id}')" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
             `).join('');
         }
 
-        // simple escaping helpers for safe injection
-        function escapeHtml(str) {
-            if (!str) return '';
-            return String(str).replace(/[&<>"']/g, function (m) {
-                return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[m];
+        function setFilter(filter) {
+            currentFilter = filter;
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
             });
-        }
-        function escapeForJs(s) {
-            return String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\n/g, '\\n').replace(/\r/g, '');
+            document.querySelector(`[data-filter="${filter}"]`).classList.add('active');
+            renderWatchlist();
         }
 
-        // --- Suggestions
         function showSuggestions(value) {
-            const el = document.getElementById('suggestions');
-            if (!el) return;
-            if (!value.trim()) { el.style.display = 'none'; el.innerHTML = ''; el.setAttribute('aria-hidden', 'true'); return; }
-            const matches = sampleMovies.filter(m => m.toLowerCase().includes(value.toLowerCase()) && !watchlist.some(i => i.title.toLowerCase() === m.toLowerCase())).slice(0, 6);
-            if (matches.length === 0) { el.style.display = 'none'; el.innerHTML = ''; el.setAttribute('aria-hidden', 'true'); return; }
-            el.innerHTML = matches.map(m => `<div class="suggestion-item" role="option" tabindex="0" onclick="selectSuggestion('${escapeForJs(m)}')">${escapeHtml(m)}</div>`).join('');
-            el.style.display = 'block';
-            el.setAttribute('aria-hidden', 'false');
-        }
+            const suggestionsEl = document.getElementById('suggestions');
+            if (!value.trim()) {
+                hidesuggestions();
+                return;
+            }
 
-        function hideSuggestions() {
-            const el = document.getElementById('suggestions');
-            if (el) { el.style.display = 'none'; el.innerHTML = ''; el.setAttribute('aria-hidden', 'true'); }
+            const matches = sampleMovies.filter(movie => 
+                movie.toLowerCase().includes(value.toLowerCase()) &&
+                !watchlist.find(item => item.title.toLowerCase() === movie.toLowerCase())
+            ).slice(0, 5);
+
+            if (matches.length === 0) {
+                hidesuggestions();
+                return;
+            }
+
+            suggestionsEl.innerHTML = matches.map(movie => `
+                <div class="suggestion-item" onclick="selectSuggestion('${movie.replace(/'/g, "\\'")}')">
+                    ${movie}
+                </div>
+            `).join('');
+            
+            suggestionsEl.style.display = 'block';
         }
 
         function selectSuggestion(title) {
             document.getElementById('titleInput').value = title;
-            hideSuggestions();
+            hidesuggestions();
         }
 
-        // --- Filters & UI wiring
-        function setFilter(filter) {
-            currentFilter = filter;
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            const btn = document.querySelector(`.filter-btn[data-filter="${filter}"]`);
-            if (btn) btn.classList.add('active');
-            renderWatchlist();
+        function hidesuggestions() {
+            document.getElementById('suggestions').style.display = 'none';
         }
 
-        // --- Theme toggle
         function toggleTheme() {
             const body = document.body;
-            const btn = document.getElementById('themeToggle');
+            const themeToggle = document.querySelector('.theme-toggle i');
+            
             if (body.hasAttribute('data-theme')) {
                 body.removeAttribute('data-theme');
-                btn.textContent = '🌙';
+                themeToggle.className = 'fas fa-moon';
                 localStorage.setItem('cinetray-theme', 'light');
             } else {
                 body.setAttribute('data-theme', 'dark');
-                btn.textContent = '☀️';
+                themeToggle.className = 'fas fa-sun';
                 localStorage.setItem('cinetray-theme', 'dark');
             }
         }
 
-        // --- Init
-        document.addEventListener('DOMContentLoaded', () => {
-            // load theme
-            if (localStorage.getItem('cinetray-theme') === 'dark') {
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load saved theme
+            const savedTheme = localStorage.getItem('cinetray-theme');
+            if (savedTheme === 'dark') {
                 document.body.setAttribute('data-theme', 'dark');
-                document.getElementById('themeToggle').textContent = '☀️';
+                document.querySelector('.theme-toggle i').className = 'fas fa-sun';
             }
 
-            // wire controls
-            document.getElementById('addBtn').addEventListener('click', addItem);
-            document.getElementById('titleInput').addEventListener('input', (e) => showSuggestions(e.target.value));
-            document.getElementById('titleInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') addItem(); });
-            document.addEventListener('click', (e) => { if (!e.target.closest('.input-group')) hideSuggestions(); });
-            document.getElementById('themeToggle').addEventListener('click', toggleTheme);
-            document.querySelectorAll('.filter-btn').forEach(btn => btn.addEventListener('click', () => setFilter(btn.dataset.filter)));
+            // Filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => setFilter(btn.dataset.filter));
+            });
 
+            // Search input
+            const titleInput = document.getElementById('titleInput');
+            titleInput.addEventListener('input', (e) => showSuggestions(e.target.value));
+            titleInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    addItem();
+                }
+            });
+
+            // Hide suggestions when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.position-relative')) {
+                    hidesuggestions();
+                }
+            });
+
+            // Initialize app
             updateStats();
             renderWatchlist();
+            
+            // Initialize PWA/TWA features
+            detectTWA();
         });
 
-        // --- Service Worker registration (static /sw.js) ---
+        // Enhanced PWA Service Worker with better error handling
         if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js')
-                    .then(registration => {
-                        console.log('CineTray PWA: Service Worker registered', registration.scope);
-                    })
-                    .catch(err => {
-                        console.error('CineTray PWA: Service Worker registration failed', err);
-                    });
+            window.addEventListener('load', async () => {
+                try {
+                    // Create a more robust service worker
+                    const swCode = `
+                        const CACHE_NAME = 'cinetray-v1.2';
+                        const STATIC_CACHE_URLS = [
+                            './',
+                            './index.html'
+                        ];
+
+                        // Install event - cache resources
+                        self.addEventListener('install', (event) => {
+                            event.waitUntil(
+                                caches.open(CACHE_NAME)
+                                    .then((cache) => {
+                                        console.log('CineTray PWA: Caching app resources');
+                                        return cache.addAll(STATIC_CACHE_URLS);
+                                    })
+                                    .then(() => self.skipWaiting())
+                                    .catch((err) => console.log('CineTray PWA: Cache failed', err))
+                            );
+                        });
+
+                        // Activate event - clean old caches
+                        self.addEventListener('activate', (event) => {
+                            event.waitUntil(
+                                caches.keys().then((cacheNames) => {
+                                    return Promise.all(
+                                        cacheNames.map((cacheName) => {
+                                            if (cacheName !== CACHE_NAME) {
+                                                console.log('CineTray PWA: Deleting old cache', cacheName);
+                                                return caches.delete(cacheName);
+                                            }
+                                        })
+                                    );
+                                }).then(() => {
+                                    console.log('CineTray PWA: Service worker activated');
+                                    return self.clients.claim();
+                                })
+                            );
+                        });
+
+                        // Fetch event - serve from cache, fallback to network
+                        self.addEventListener('fetch', (event) => {
+                            event.respondWith(
+                                caches.match(event.request)
+                                    .then((response) => {
+                                        // Return cached version or fetch from network
+                                        return response || fetch(event.request).catch(() => {
+                                            // If both cache and network fail, return a basic offline page
+                                            if (event.request.destination === 'document') {
+                                                return new Response(
+                                                    '<html><body><h1>CineTray</h1><p>App is offline. Your data is safe!</p></body></html>',
+                                                    { headers: { 'Content-Type': 'text/html' } }
+                                                );
+                                            }
+                                        });
+                                    })
+                            );
+                        });
+                    `;
+
+                    const blob = new Blob([swCode], { type: 'application/javascript' });
+                    const swUrl = URL.createObjectURL(blob);
+                    
+                    const registration = await navigator.serviceWorker.register(swUrl);
+                    console.log('CineTray PWA: Service Worker registered successfully', registration.scope);
+                    
+                    // Show install prompt after successful SW registration
+                    setTimeout(() => showPWAInstallPrompt(), 2000);
+                    
+                } catch (error) {
+                    console.log('CineTray PWA: Service Worker registration failed', error);
+                    // Even if SW fails, show install prompt for PWA
+                    setTimeout(() => showPWAInstallPrompt(), 1000);
+                }
             });
         } else {
             console.log('CineTray PWA: Service Workers not supported');
+            // Show basic PWA install prompt even without SW support
+            setTimeout(() => showPWAInstallPrompt(), 1000);
+        }
+
+        // PWA Install Prompt - Enhanced
+        let deferredPrompt;
+        let installButton;
+        
+        window.addEventListener('beforeinstallprompt', (e) => {
+            console.log('CineTray PWA: Install prompt available');
+            e.preventDefault();
+            deferredPrompt = e;
+            showInstallButton();
+        });
+
+        // Detect if app is already installed
+        window.addEventListener('appinstalled', (e) => {
+            console.log('CineTray PWA: App was installed');
+            hideInstallButton();
+            showNotification('🎉 CineTray installed successfully! Launch from your home screen.');
+        });
+
+        function showInstallButton() {
+            // Add install button to header if not already installed and not already shown
+            if (!window.matchMedia('(display-mode: standalone)').matches && !installButton) {
+                installButton = document.createElement('button');
+                installButton.innerHTML = '📱';
+                installButton.className = 'theme-toggle';
+                installButton.title = 'Install CineTray App';
+                installButton.style.marginLeft = '0.5rem';
+                installButton.onclick = installPWA;
+                
+                document.querySelector('.header-content').appendChild(installButton);
+            }
+        }
+
+        function hideInstallButton() {
+            if (installButton) {
+                installButton.remove();
+                installButton = null;
+            }
+        }
+
+        function installPWA() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('CineTray PWA: User accepted the install prompt');
+                        hideInstallButton();
+                    } else {
+                        console.log('CineTray PWA: User dismissed the install prompt');
+                    }
+                    deferredPrompt = null;
+                });
+            } else {
+                // Fallback for browsers that don't support install prompt
+                showNotification('💡 Add CineTray to your home screen: Menu > Add to Home Screen');
+            }
+        }
+
+        function showPWAInstallPrompt() {
+            // Show notification about PWA capabilities
+            if (!window.matchMedia('(display-mode: standalone)').matches && 
+                !localStorage.getItem('pwa-prompt-shown-v2')) {
+                
+                // Check if we're on Android Chrome (primary TWA target)
+                const isAndroidChrome = /Android/.test(navigator.userAgent) && /Chrome/.test(navigator.userAgent);
+                
+                if (isAndroidChrome) {
+                    showNotification('🚀 Install CineTray as an app! Look for the "Add to Home Screen" option or 📱 button.');
+                } else {
+                    showNotification('💡 Add CineTray to your home screen for a better experience!');
+                }
+                
+                localStorage.setItem('pwa-prompt-shown-v2', 'true');
+            }
+        }
+
+        // TWA (Trusted Web Activity) Detection and Optimization
+        function detectTWA() {
+            // Check if running in TWA environment
+            const isTWA = document.referrer.includes('android-app://') || 
+                         window.matchMedia('(display-mode: standalone)').matches ||
+                         navigator.standalone === true;
+            
+            if (isTWA) {
+                console.log('CineTray: Running in TWA/PWA mode');
+                document.body.classList.add('twa-mode');
+                
+                // Optimize for TWA
+                optimizeForTWA();
+            }
+        }
+
+        function optimizeForTWA() {
+            // Add TWA-specific optimizations
+            const style = document.createElement('style');
+            style.textContent = `
+                .twa-mode {
+                    --header-height: calc(2rem + env(safe-area-inset-top));
+                }
+                
+                .twa-mode .header {
+                    padding-top: calc(1.5rem + env(safe-area-inset-top));
+                }
+                
+                .twa-mode .container {
+                    padding-bottom: calc(0.5rem + env(safe-area-inset-bottom));
+                }
+                
+                /* Hide install button in TWA mode */
+                .twa-mode .theme-toggle[title*="Install"] {
+                    display: none;
+                }
+            `;
+            document.head.appendChild(style);
         }
     </script>
 </body>
