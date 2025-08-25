@@ -237,17 +237,27 @@
         }
 
         .filter-btn {
-            padding: 0.6rem 1.5rem;
+            padding: 0.4rem 1.2rem;
             border: none;
-            border-radius: 8px;
-            background: transparent;
+            border-radius: 6px;
+            background: var(--bg);
             color: var(--text);
+            font-size: 0.85rem;
             font-weight: 500;
-            font-size: 0.95rem;
             cursor: pointer;
             transition: all 0.2s ease;
-            min-width: 100px;
+            margin: 0 2px;
+            min-width: 70px;
             text-align: center;
+            height: 32px;
+            line-height: 1.2;
+            white-space: nowrap;
+        }
+        
+        /* Make the middle button wider */
+        .filter-btn[data-filter="to-watch"] {
+            min-width: 90px;
+            padding: 0.4rem 1.5rem;
         }
 
         .filter-btn:hover {
@@ -1050,19 +1060,31 @@
         // Register Service Worker
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
-                    .then(registration => {
-                        console.log('ServiceWorker registration successful');
-                    })
-                    .catch(err => {
-                        console.log('ServiceWorker registration failed: ', err);
-                    });
+                const swUrl = new URL('sw.js', window.location.href);
+                
+                // Only register service worker if served over HTTPS or localhost
+                if (window.location.protocol === 'https:' || 
+                    window.location.hostname === 'localhost' || 
+                    window.location.hostname === '127.0.0.1') {
+                    
+                    navigator.serviceWorker.register(swUrl)
+                        .then(registration => {
+                            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                        })
+                        .catch(err => {
+                            console.warn('ServiceWorker registration failed: ', err);
+                        });
+                } else {
+                    console.warn('Service workers are only available over HTTPS or localhost');
+                }
             });
+        } else {
+            console.warn('Service workers are not supported in this browser');
         }
 
         // Check if app is running as PWA
-        window.addEventListener('appinstalled', () => {
-            console.log('CineTray was installed as PWA');
+        window.addEventListener('appinstalled', (event) => {
+            console.log('CineTray was installed as PWA', event);
         });
     </script>
 </body>
