@@ -97,7 +97,41 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 1rem;
+            padding: 1rem 0;
+        }
+        
+        /* Header Actions */
+        .header-actions {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        
+        /* Install Button */
+        .install-button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s ease;
+        }
+        
+        .install-button:hover {
+            background: var(--primary-dark);
+        }
+        
+        .dark-mode .install-button {
+            background: var(--primary-dark);
+        }
+        
+        .dark-mode .install-button:hover {
+            background: var(--primary);
         }
 
         .logo {
@@ -597,9 +631,14 @@
                     <i class="fas fa-film"></i>
                     CineTray
                 </div>
-                <button class="theme-toggle" onclick="toggleTheme()">
-                    <i class="fas fa-moon"></i>
-                </button>
+                <div class="header-actions">
+                    <button id="install-button" class="install-button" style="display: none;">
+                        <i class="fas fa-download"></i> Install
+                    </button>
+                    <button class="theme-toggle" onclick="toggleTheme()">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -1056,69 +1095,61 @@
         }
     </script>
     <script>
+        // Global variable for install prompt
+        let deferredPrompt = null;
+        
+        // Function to handle install button click
+        function handleInstallClick() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then(choiceResult => {
+                    console.log(choiceResult.outcome === 'accepted' ? 
+                        'User accepted install prompt' : 
+                        'User dismissed install prompt');
+                    deferredPrompt = null;
+                });
+            }
+        }
+
         // Register Service Worker
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                const swUrl = new URL('sw.js', window.location.href);
+                const swUrl = new URL('sw.js', window.location.origin + '/CineTray/');
                 
-                // Only register service worker if served over HTTPS or localhost
-                if (window.location.protocol === 'https:' || 
-                    window.location.hostname === 'localhost' || 
-                    window.location.hostname === '127.0.0.1' ||
-                    window.location.hostname.endsWith('github.io')) {
-                    
-                    navigator.serviceWorker.register(swUrl)
-                        .then(registration => {
-                            console.log('ServiceWorker registration successful with scope: ', registration.scope);
-                        })
-                        .catch(err => {
-                            console.warn('ServiceWorker registration failed: ', err);
-                        });
-                } else {
-                    console.warn('Service workers are only available over HTTPS, localhost, or GitHub Pages');
-                }
+                navigator.serviceWorker.register(swUrl)
+                    .then(registration => {
+                        console.log('CineTray PWA: Service Worker registered successfully', window.location.href);
+                    })
+                    .catch(error => {
+                        console.error('CineTray PWA: Service Worker registration failed: ', error);
+                    });
             });
         } else {
             console.warn('Service workers are not supported in this browser');
         }
 
         // Handle PWA install prompt
-        let deferredPrompt;
-        const installButton = document.getElementById('install-button');
-        
         window.addEventListener('beforeinstallprompt', (e) => {
             console.log('CineTray PWA: Install prompt available');
-            // Prevent Chrome 67 and earlier from automatically showing the prompt
             e.preventDefault();
-            // Stash the event so it can be triggered later
             deferredPrompt = e;
             
-            // Show install button if it exists
+            const installButton = document.getElementById('install-button');
             if (installButton) {
-                installButton.style.display = 'block';
-                installButton.addEventListener('click', () => {
-                    // Show the install prompt
-                    deferredPrompt.prompt();
-                    // Wait for the user to respond to the prompt
-                    deferredPrompt.userChoice.then((choiceResult) => {
-                        if (choiceResult.outcome === 'accepted') {
-                            console.log('User accepted the install prompt');
-                        } else {
-                            console.log('User dismissed the install prompt');
-                        }
-                        deferredPrompt = null;
-                    });
-                });
+                // Clone and replace button to prevent duplicate event listeners
+                const newButton = installButton.cloneNode(true);
+                installButton.parentNode.replaceChild(newButton, installButton);
+                newButton.style.display = 'block';
+                newButton.onclick = handleInstallClick;
             }
         });
 
-        // Check if app is running as PWA
-        window.addEventListener('appinstalled', (event) => {
-            console.log('CineTray was installed as PWA', event);
-            // Hide the install button if visible
-            if (installButton) {
-                installButton.style.display = 'none';
-            }
+        // Handle successful installation
+        window.addEventListener('appinstalled', () => {
+            console.log('CineTray was installed as PWA');
+            const installButton = document.getElementById('install-button');
+            if (installButton) installButton.style.display = 'none';
+            deferredPrompt = null;
         });
     </script>
     <script src="app.js"></script>
