@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineTray - Your Personal Watchlist</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #f1f5f9;
+            --text: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg: #ffffff;
+            --bg-secondary: #f8fafc;
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        [data-theme="dark"] {
+            --primary: #818cf8;
+            --primary-dark: #6366f1;
+            --secondary: #1e293b;
+            --text: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --bg: #0f172a;
+            --bg-secondary: #1e293b;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            border-radius: 0 0 1rem 1rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .theme-toggle {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 0.75rem;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+            display: block;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .controls {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .input-group {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .input-field {
+            flex: 1;
+            min-width: 250px;
+            padding: 0.875rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            background: var(--bg);
+            color: var(--text);
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .btn {
+            padding: 0.875rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: var(--bg);
+            color: var(--text);
+            border: 2px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--secondary);
+        }
+
+        .filters {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--border);
+            background: var(--bg);
+            color: var(--text);
+            border-radius: 2rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .search-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--bg);
+            border: 2px solid var(--border);
+            border-top: none;
+            border-radius: 0 0 0.5rem 0.5rem;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+        }
+
+        .suggestion-item {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .suggestion-item:hover {
+            background: var(--secondary);
+        }
+
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+
+        .watchlist {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .watchlist-item {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .watchlist-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .item-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .item-title:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+
+        .item-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .status-watched {
+            background: var(--success);
+            color: white;
+        }
+
+        .status-to-watch {
+            background: var(--warning);
+            color: white;
+        }
+
+        .date-added {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .item-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 0.5rem;
+            border: none;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            min-width: 2.5rem;
+            height: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-watch {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-unwatch {
+            background: var(--warning);
+            color: white;
+        }
+
+        .btn-delete {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-edit {
+            background: var(--primary);
+            color: white;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.1);
+            box-shadow: var(--shadow);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-muted);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .bulk-actions {
+            display: none;
+            background: var(--primary);
+            color: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .bulk-actions.show {
+            display: flex;
+        }
+
+        .notification {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: var(--success);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: var(--shadow-lg);
+            z-index: 1000;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.error {
+            background: var(--danger);
+        }
+
+        .checkbox {
+            width: 1.2rem;
+            height: 1.2rem;
+            margin-right: 0.5rem;
+        }
+
+        .position-relative {
+            position: relative;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0.5rem;
+            }
+
+            .header {
+                margin-bottom: 1rem;
+                padding: 1.5rem 0;
+            }
+
+            .logo {
+                font-size: 1.5rem;
+            }
+
+            .stats {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 0.75rem;
+            }
+
+            .stat-card {
+                padding: 1rem;
+            }
+
+            .stat-number {
+                font-size: 1.5rem;
+            }
+
+            .input-group {
+                flex-direction: column;
+            }
+
+            .input-field {
+                min-width: auto;
+            }
+
+            .filters {
+                justify-content: center;
+            }
+
+            .item-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.75rem;
+            }
+
+            .item-title {
+                font-size: 1.1rem;
+            }
+
+            .item-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+
+            .notification {
+                top: 1rem;
+                right: 1rem;
+                left: 1rem;
+                right: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .stats {
+                grid-template-columns: 1fr 1fr;
+                gap: 0.5rem;
+            }
+
+            .controls {
+                padding: 1rem;
+            }
+
+            .watchlist-item {
+                padding: 1rem;
+            }
+        }
+
+        /* Loading animation */
+        .loading {
+            display: inline-block;
+            width: 1rem;
+            height: 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Smooth transitions for theme switching */
+        * {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-film"></i>
+                    CineTray
+                </div>
+                <button class="theme-toggle" onclick="toggleTheme()">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="stats">
+            <div class="stat-card">
+                <span class="stat-number" id="totalCount">0</span>
+                <span class="stat-label">Total Items</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" id="watchedCount">0</span>
+                <span class="stat-label">Watched</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" id="toWatchCount">0</span>
+                <span class="stat-label">To Watch</span>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="input-group">
+                <div class="position-relative" style="flex: 1; min-width: 250px;">
+                    <input type="text" id="titleInput" class="input-field" placeholder="Enter movie or series title..." autocomplete="off">
+                    <div class="search-suggestions" id="suggestions"></div>
+                </div>
+                <button class="btn btn-primary" onclick="addItem()">
+                    <i class="fas fa-plus"></i>
+                    Add to List
+                </button>
+            </div>
+            
+            <div class="filters">
+                <span style="color: var(--text-muted); font-weight: 600; margin-right: 0.5rem;">Filter:</span>
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="to-watch">To Watch</button>
+                <button class="filter-btn" data-filter="watched">Watched</button>
+                <button class="btn btn-secondary" onclick="toggleBulkMode()">
+                    <i class="fas fa-check-square"></i>
+                    Bulk Actions
+                </button>
+            </div>
+        </div>
+
+        <div class="bulk-actions" id="bulkActions">
+            <div>
+                <span id="selectedCount">0</span> items selected
+            </div>
+            <div style="display: flex; gap: 0.5rem;">
+                <button class="btn" style="background: var(--success); color: white;" onclick="bulkMarkWatched()">
+                    <i class="fas fa-eye"></i>
+                    Mark Watched
+                </button>
+                <button class="btn" style="background: var(--warning); color: white;" onclick="bulkMarkToWatch()">
+                    <i class="fas fa-clock"></i>
+                    Mark To Watch
+                </button>
+                <button class="btn" style="background: var(--danger); color: white;" onclick="bulkDelete()">
+                    <i class="fas fa-trash"></i>
+                    Delete
+                </button>
+                <button class="btn btn-secondary" onclick="toggleBulkMode()">
+                    Cancel
+                </button>
+            </div>
+        </div>
+
+        <div class="watchlist" id="watchlist">
+            <div class="empty-state">
+                <i class="fas fa-film"></i>
+                <h3>Your watchlist is empty</h3>
+                <p>Start adding movies and series to keep track of what you want to watch!</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="notification" id="notification"></div>
+
+    <script>
+        let watchlist = JSON.parse(localStorage.getItem('cinetray-watchlist') || '[]');
+        let currentFilter = 'all';
+        let bulkMode = false;
+        let selectedItems = new Set();
+
+        // Sample movie titles for suggestions
+        const sampleMovies = [
+            "The Shawshank Redemption", "The Godfather", "The Dark Knight", "Pulp Fiction",
+            "The Lord of the Rings", "Forrest Gump", "Inception", "Fight Club",
+            "The Matrix", "Goodfellas", "The Empire Strikes Back", "One Flew Over the Cuckoo's Nest",
+            "Se7en", "The Silence of the Lambs", "It's a Wonderful Life", "Schindler's List",
+            "Saving Private Ryan", "The Green Mile", "Interstellar", "Parasite",
+            "Avengers: Endgame", "Titanic", "Avatar", "Black Panther", "Spider-Man: Into the Spider-Verse"
+        ];
+
+        function saveData() {
+            localStorage.setItem('cinetray-watchlist', JSON.stringify(watchlist));
+            updateStats();
+            renderWatchlist();
+        }
+
+        function updateStats() {
+            const total = watchlist.length;
+            const watched = watchlist.filter(item => item.status === 'watched').length;
+            const toWatch = total - watched;
+
+            document.getElementById('totalCount').textContent = total;
+            document.getElementById('watchedCount').textContent = watched;
+            document.getElementById('toWatchCount').textContent = toWatch;
+        }
+
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type} show`;
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        function generateId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2);
+        }
+
+        function addItem() {
+            const titleInput = document.getElementById('titleInput');
+            const title = titleInput.value.trim();
+
+            if (!title) {
+                showNotification('Please enter a title', 'error');
+                return;
+            }
+
+            // Check for duplicates
+            const exists = watchlist.find(item => 
+                item.title.toLowerCase() === title.toLowerCase()
+            );
+
+            if (exists) {
+                showNotification('This title already exists in your watchlist', 'error');
+                return;
+            }
+
+            const newItem = {
+                id: generateId(),
+                title: title,
+                status: 'to-watch',
+                dateAdded: new Date().toLocaleDateString(),
+                dateWatched: null
+            };
+
+            watchlist.unshift(newItem);
+            titleInput.value = '';
+            hidesuggestions();
+            saveData();
+            showNotification(`"${title}" added to your watchlist!`);
+        }
+
+        function deleteItem(id) {
+            if (confirm('Are you sure you want to remove this item?')) {
+                const item = watchlist.find(item => item.id === id);
+                watchlist = watchlist.filter(item => item.id !== id);
+                saveData();
+                showNotification(`"${item.title}" removed from watchlist`);
+            }
+        }
+
+        function toggleStatus(id) {
+            const item = watchlist.find(item => item.id === id);
+            if (item) {
+                if (item.status === 'watched') {
+                    item.status = 'to-watch';
+                    item.dateWatched = null;
+                    showNotification(`"${item.title}" marked as to watch`);
+                } else {
+                    item.status = 'watched';
+                    item.dateWatched = new Date().toLocaleDateString();
+                    showNotification(`"${item.title}" marked as watched!`);
+                }
+                saveData();
+            }
+        }
+
+        function openGoogleSearch(title) {
+            const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(title + ' movie')}`;
+            window.open(searchUrl, '_blank');
+        }
+
+        function renderWatchlist() {
+            const watchlistEl = document.getElementById('watchlist');
+            let filteredItems = watchlist;
+
+            if (currentFilter === 'watched') {
+                filteredItems = watchlist.filter(item => item.status === 'watched');
+            } else if (currentFilter === 'to-watch') {
+                filteredItems = watchlist.filter(item => item.status === 'to-watch');
+            }
+
+            // Sort: to-watch items first, then by date added (newest first)
+            filteredItems.sort((a, b) => {
+                if (a.status === 'to-watch' && b.status === 'watched') return -1;
+                if (a.status === 'watched' && b.status === 'to-watch') return 1;
+                return new Date(b.dateAdded) - new Date(a.dateAdded);
+            });
+
+            if (filteredItems.length === 0) {
+                watchlistEl.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-film"></i>
+                        <h3>No items found</h3>
+                        <p>${currentFilter === 'all' ? 'Your watchlist is empty' : `No ${currentFilter.replace('-', ' ')} items`}</p>
+                    </div>
+                `;
+                return;
+            }
+
+            watchlistEl.innerHTML = filteredItems.map(item => `
+                <div class="watchlist-item">
+                    <div class="item-header">
+                        <div style="flex: 1;">
+                            ${bulkMode ? `<input type="checkbox" class="checkbox" data-id="${item.id}" onchange="toggleSelection('${item.id}')">` : ''}
+                            <a href="#" class="item-title" onclick="event.preventDefault(); openGoogleSearch('${item.title.replace(/'/g, "\\'")}')">
+                                ${item.title}
+                            </a>
+                            <div class="item-meta">
+                                <span class="status-badge ${item.status === 'watched' ? 'status-watched' : 'status-to-watch'}">
+                                    ${item.status === 'watched' ? 'Watched' : 'To Watch'}
+                                </span>
+                                <span class="date-added">
+                                    Added: ${item.dateAdded}
+                                </span>
+                                ${item.dateWatched ? `<span class="date-added">Watched: ${item.dateWatched}</span>` : ''}
+                            </div>
+                        </div>
+                        ${!bulkMode ? `
+                        <div class="item-actions">
+                            <button class="action-btn ${item.status === 'watched' ? 'btn-unwatch' : 'btn-watch'}" 
+                                    onclick="toggleStatus('${item.id}')" 
+                                    title="${item.status === 'watched' ? 'Mark as To Watch' : 'Mark as Watched'}">
+                                <i class="fas ${item.status === 'watched' ? 'fa-undo' : 'fa-eye'}"></i>
+                            </button>
+                            <button class="action-btn btn-delete" onclick="deleteItem('${item.id}')" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function setFilter(filter) {
+            currentFilter = filter;
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[data-filter="${filter}"]`).classList.add('active');
+            renderWatchlist();
+        }
+
+        function toggleBulkMode() {
+            bulkMode = !bulkMode;
+            selectedItems.clear();
+            document.getElementById('bulkActions').classList.toggle('show', bulkMode);
+            document.getElementById('selectedCount').textContent = '0';
+            renderWatchlist();
+        }
+
+        function toggleSelection(id) {
+            if (selectedItems.has(id)) {
+                selectedItems.delete(id);
+            } else {
+                selectedItems.add(id);
+            }
+            document.getElementById('selectedCount').textContent = selectedItems.size;
+        }
+
+        function bulkMarkWatched() {
+            selectedItems.forEach(id => {
+                const item = watchlist.find(item => item.id === id);
+                if (item && item.status !== 'watched') {
+                    item.status = 'watched';
+                    item.dateWatched = new Date().toLocaleDateString();
+                }
+            });
+            saveData();
+            showNotification(`${selectedItems.size} items marked as watched`);
+            selectedItems.clear();
+            document.getElementById('selectedCount').textContent = '0';
+        }
+
+        function bulkMarkToWatch() {
+            selectedItems.forEach(id => {
+                const item = watchlist.find(item => item.id === id);
+                if (item && item.status !== 'to-watch') {
+                    item.status = 'to-watch';
+                    item.dateWatched = null;
+                }
+            });
+            saveData();
+            showNotification(`${selectedItems.size} items marked as to watch`);
+            selectedItems.clear();
+            document.getElementById('selectedCount').textContent = '0';
+        }
+
+        function bulkDelete() {
+            if (confirm(`Are you sure you want to delete ${selectedItems.size} items?`)) {
+                watchlist = watchlist.filter(item => !selectedItems.has(item.id));
+                saveData();
+                showNotification(`${selectedItems.size} items deleted`);
+                selectedItems.clear();
+                document.getElementById('selectedCount').textContent = '0';
+            }
+        }
+
+        function showSuggestions(value) {
+            const suggestionsEl = document.getElementById('suggestions');
+            if (!value.trim()) {
+                hidesuggestions();
+                return;
+            }
+
+            const matches = sampleMovies.filter(movie => 
+                movie.toLowerCase().includes(value.toLowerCase()) &&
+                !watchlist.find(item => item.title.toLowerCase() === movie.toLowerCase())
+            ).slice(0, 5);
+
+            if (matches.length === 0) {
+                hidesuggestions();
+                return;
+            }
+
+            suggestionsEl.innerHTML = matches.map(movie => `
+                <div class="suggestion-item" onclick="selectSuggestion('${movie.replace(/'/g, "\\'")}')">
+                    ${movie}
+                </div>
+            `).join('');
+            
+            suggestionsEl.style.display = 'block';
+        }
+
+        function selectSuggestion(title) {
+            document.getElementById('titleInput').value = title;
+            hidesuggestions();
+        }
+
+        function hidesuggestions() {
+            document.getElementById('suggestions').style.display = 'none';
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            const themeToggle = document.querySelector('.theme-toggle i');
+            
+            if (body.hasAttribute('data-theme')) {
+                body.removeAttribute('data-theme');
+                themeToggle.className = 'fas fa-moon';
+                localStorage.setItem('cinetray-theme', 'light');
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                themeToggle.className = 'fas fa-sun';
+                localStorage.setItem('cinetray-theme', 'dark');
+            }
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load saved theme
+            const savedTheme = localStorage.getItem('cinetray-theme');
+            if (savedTheme === 'dark') {
+                document.body.setAttribute('data-theme', 'dark');
+                document.querySelector('.theme-toggle i').className = 'fas fa-sun';
+            }
+
+            // Filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => setFilter(btn.dataset.filter));
+            });
+
+            // Search input
+            const titleInput = document.getElementById('titleInput');
+            titleInput.addEventListener('input', (e) => showSuggestions(e.target.value));
+            titleInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    addItem();
+                }
+            });
+
+            // Hide suggestions when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.position-relative')) {
+                    hidesuggestions();
+                }
+            });
+
+            // Initialize app
+            updateStats();
+            renderWatchlist();
+        });
+
+        // Service Worker Registration for PWA functionality
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').catch(() => {
+                    // Ignore service worker registration errors in this demo
+                });
+            });
+        }
+    </script>
+</body>
+</html>
