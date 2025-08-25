@@ -1055,7 +1055,6 @@
             document.head.appendChild(style);
         }
     </script>
-    <script src="app.js"></script>
     <script>
         // Register Service Worker
         if ('serviceWorker' in navigator) {
@@ -1065,7 +1064,8 @@
                 // Only register service worker if served over HTTPS or localhost
                 if (window.location.protocol === 'https:' || 
                     window.location.hostname === 'localhost' || 
-                    window.location.hostname === '127.0.0.1') {
+                    window.location.hostname === '127.0.0.1' ||
+                    window.location.hostname.endsWith('github.io')) {
                     
                     navigator.serviceWorker.register(swUrl)
                         .then(registration => {
@@ -1075,17 +1075,52 @@
                             console.warn('ServiceWorker registration failed: ', err);
                         });
                 } else {
-                    console.warn('Service workers are only available over HTTPS or localhost');
+                    console.warn('Service workers are only available over HTTPS, localhost, or GitHub Pages');
                 }
             });
         } else {
             console.warn('Service workers are not supported in this browser');
         }
 
+        // Handle PWA install prompt
+        let deferredPrompt;
+        const installButton = document.getElementById('install-button');
+        
+        window.addEventListener('beforeinstallprompt', (e) => {
+            console.log('CineTray PWA: Install prompt available');
+            // Prevent Chrome 67 and earlier from automatically showing the prompt
+            e.preventDefault();
+            // Stash the event so it can be triggered later
+            deferredPrompt = e;
+            
+            // Show install button if it exists
+            if (installButton) {
+                installButton.style.display = 'block';
+                installButton.addEventListener('click', () => {
+                    // Show the install prompt
+                    deferredPrompt.prompt();
+                    // Wait for the user to respond to the prompt
+                    deferredPrompt.userChoice.then((choiceResult) => {
+                        if (choiceResult.outcome === 'accepted') {
+                            console.log('User accepted the install prompt');
+                        } else {
+                            console.log('User dismissed the install prompt');
+                        }
+                        deferredPrompt = null;
+                    });
+                });
+            }
+        });
+
         // Check if app is running as PWA
         window.addEventListener('appinstalled', (event) => {
             console.log('CineTray was installed as PWA', event);
+            // Hide the install button if visible
+            if (installButton) {
+                installButton.style.display = 'none';
+            }
         });
     </script>
+    <script src="app.js"></script>
 </body>
 </html>

@@ -1,12 +1,13 @@
-const CACHE_NAME = 'cinetray-v1.4';
+const CACHE_NAME = 'cinetray-v1.5';
+const BASE_PATH = '/CineTray/';
 const STATIC_CACHE_URLS = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/sw.js',
-  '/favicon.ico',
-  '/icon-192.png',
-  '/icon-512.png',
+  BASE_PATH,
+  `${BASE_PATH}index.html`,
+  `${BASE_PATH}manifest.json`,
+  `${BASE_PATH}sw.js`,
+  `${BASE_PATH}favicon.ico`,
+  `${BASE_PATH}icon-192.png`,
+  `${BASE_PATH}icon-512.png`,
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css',
   'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap'
 ];
@@ -57,7 +58,7 @@ self.addEventListener('fetch', (event) => {
   if (event.request.mode === 'navigate') {
     event.respondWith(
       fetch(event.request)
-        .catch(() => caches.match('/index.html'))
+        .catch(() => caches.match(`${BASE_PATH}index.html`))
     );
     return;
   }
@@ -74,7 +75,7 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       fromNetwork(
         event.request, 
-        caches.match(event.request).then(response => response || caches.match('/index.html'))
+        caches.match(event.request).then(response => response || caches.match(`${BASE_PATH}index.html`))
       )
     );
   }
