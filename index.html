@@ -1,9 +1,48 @@
-<!DOCTYPE html>
+<!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#6366f1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="CineTray">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="CineTray">
+    <meta name="msapplication-TileColor" content="#6366f1">
+    <meta name="msapplication-tap-highlight" content="no">
+    
+    <!-- TWA (Trusted Web Activity) Meta Tags -->
+    <meta name="google-play-app" content="app-id=com.cinetray.watchlist">
+    <meta name="mobile-web-app-title" content="CineTray">
+    <meta name="mobile-web-app-status-bar-style" content="default">
+    
+    <!-- Android Chrome TWA -->
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#6366f1">
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#4f46e5">
+    
+    <!-- PWA Icons - Simple Canvas Generated -->
+    <link rel="icon" sizes="192x192" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAN1wAADdcBQiibeAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAASFSURBVHic7d1NbxJBFAbgd2Zmd2YpHwVKCyK01rQ2JjZNjDHGaGNi/P8/wJPeNPHgwYMHD3ryYGKMsY01TSxJrQRaKLTAFpaZ2dl5PR2BEpAy782TZWfmfWcGkVIKY8y5ZNs9AGPaYAFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsH0PcF7EJgS9IQAAAABJRU5ErkJggg==">
+    <link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAN1wAADdcBQiibeAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAASFSURBVHic7d1NbxJBFAbgd2Zmd2YpHwVKCyK01rQ2JjZNjDHGaGNi/P8/wJPeNPHgwYMHD3ryYGKMsY01TSxJrQRaKLTAFpaZ2dl5PR2BEpAy782TZWfmfWcGkVIKY8y5ZNs9AGPaYAFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsFkAFmwWgAWbBWDBZgFYsH0PcF7EJgS9IQAAAABJRU5ErkJggg==">XL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYsXL168ePHixYs<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CineTray - Your Personal Watchlist</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#6366f1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="CineTray">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="CineTray">
+    <meta name="msapplication-TileColor" content="#6366f1">
+    <meta name="msapplication-tap-highlight" content="no">
+    
+    <!-- PWA Icons -->
+    <link rel="icon" type="image/png" sizes="192x192" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%236366f1'/><text y='70' font-size='60' text-anchor='middle' x='50' fill='white'>🎬</text></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%236366f1'/><text y='70' font-size='60' text-anchor='middle' x='50' fill='white'>🎬</text></svg>">
+    
+    <!-- PWA Manifest - Simplified -->
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkNpbmVUcmF5IC0gUGVyc29uYWwgV2F0Y2hsaXN0IiwKICAic2hvcnRfbmFtZSI6ICJDaW5lVHJheSIsCiAgImRlc2NyaXB0aW9uIjogIk1hbmFnZSB5b3VyIG1vdmllcyBhbmQgc2VyaWVzIHdhdGNobGlzdCIsCiAgInN0YXJ0X3VybCI6ICIuLyIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiI2ZmZmZmZiIsCiAgInRoZW1lX2NvbG9yIjogIiM2MzY2ZjEiLAogICJvcmllbnRhdGlvbiI6ICJwb3J0cmFpdCIsCiAgInNjb3BlIjogIi4vIiwKICAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAiZGF0YTppbWFnZS9zdmcreG1sLDxzdmcgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyB2aWV3Qm94PScwIDAgMTAwIDEwMCc+PHJlY3Qgd2lkdGg9JzEwMCcgaGVpZ2h0PScxMDAnIGZpbGw9JyU0ZjQ2ZTUnLz48dGV4dCB5PSc3MScgZm9udC1zaXplPSc1MCcgdGV4dC1hbmNob3I9J21pZGRsZScgeD0nNTAnIGZpbGw9J3doaXRlJz7wn46sPC90ZXh0Pjwvc3ZnPiIsCiAgICAgICJzaXplcyI6ICIxOTJ4MTkyIiwKICAICAgInR5cGUiOiAiaW1hZ2Uvc3ZnK3htbCIKICAgIH0sCiAgICB7CiAgICAgICJzcmMiOiAiZGF0YTppbWFnZS9zdmcreG1sLDxzdmcgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyB2aWV3Qm94PScwIDAgMTAwIDEwMCc+PHJlY3Qgd2lkdGg9JzEwMCcgaGVpZ2h0PScxMDAnIGZpbGw9JyU0ZjQ2ZTUnLz48dGV4dCB5PSc3MScgZm9udC1zaXplPSc1MCcgdGV4dC1hbmNob3I9J21pZGRsZScgeD0nNTAnIGZpbGw9J3doaXRlJz7wn46sPC90ZXh0Pjwvc3ZnPiIsCiAgICAgICJzaXplcyI6ICI1MTJ4NTEyIiwKICAgICAgInR5cGUiOiAiaW1hZ2Uvc3ZnK3htbCIsCiAgICAgICJwdXJwb3NlIjogImFueSBtYXNrYWJsZSIKICAgIH0KICBdLAogICJjYXRlZ29yaWVzIjogWyJlbnRlcnRhaW5tZW50IiwgInByb2R1Y3Rpdml0eSJdCn0=">;purpose&quot;:&quot;maskable&quot;}],&quot;categories&quot;:[&quot;entertainment&quot;,&quot;productivity&quot;]}">
+    
     <style>
         /* Font Awesome Icons - Inline to avoid CORS issues */
         @font-face {
@@ -548,6 +587,26 @@
             to { transform: rotate(360deg); }
         }
 
+        /* PWA specific styles */
+        @media (display-mode: standalone) {
+            body {
+                padding-top: env(safe-area-inset-top);
+                padding-bottom: env(safe-area-inset-bottom);
+            }
+            
+            .header {
+                padding-top: calc(env(safe-area-inset-top) + 1rem);
+            }
+        }
+
+        /* Prevent text selection on buttons for better mobile feel */
+        .btn, .filter-btn, .action-btn, .theme-toggle {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
         /* Smooth transitions for theme switching */
         * {
             transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
@@ -879,15 +938,208 @@
             // Initialize app
             updateStats();
             renderWatchlist();
+            
+            // Initialize PWA/TWA features
+            detectTWA();
         });
 
-        // Service Worker Registration for PWA functionality
+        // Enhanced PWA Service Worker with better error handling
         if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js').catch(() => {
-                    // Ignore service worker registration errors in this demo
-                });
+            window.addEventListener('load', async () => {
+                try {
+                    // Create a more robust service worker
+                    const swCode = `
+                        const CACHE_NAME = 'cinetray-v1.2';
+                        const STATIC_CACHE_URLS = [
+                            './',
+                            './index.html'
+                        ];
+
+                        // Install event - cache resources
+                        self.addEventListener('install', (event) => {
+                            event.waitUntil(
+                                caches.open(CACHE_NAME)
+                                    .then((cache) => {
+                                        console.log('CineTray PWA: Caching app resources');
+                                        return cache.addAll(STATIC_CACHE_URLS);
+                                    })
+                                    .then(() => self.skipWaiting())
+                                    .catch((err) => console.log('CineTray PWA: Cache failed', err))
+                            );
+                        });
+
+                        // Activate event - clean old caches
+                        self.addEventListener('activate', (event) => {
+                            event.waitUntil(
+                                caches.keys().then((cacheNames) => {
+                                    return Promise.all(
+                                        cacheNames.map((cacheName) => {
+                                            if (cacheName !== CACHE_NAME) {
+                                                console.log('CineTray PWA: Deleting old cache', cacheName);
+                                                return caches.delete(cacheName);
+                                            }
+                                        })
+                                    );
+                                }).then(() => {
+                                    console.log('CineTray PWA: Service worker activated');
+                                    return self.clients.claim();
+                                })
+                            );
+                        });
+
+                        // Fetch event - serve from cache, fallback to network
+                        self.addEventListener('fetch', (event) => {
+                            event.respondWith(
+                                caches.match(event.request)
+                                    .then((response) => {
+                                        // Return cached version or fetch from network
+                                        return response || fetch(event.request).catch(() => {
+                                            // If both cache and network fail, return a basic offline page
+                                            if (event.request.destination === 'document') {
+                                                return new Response(
+                                                    '<html><body><h1>CineTray</h1><p>App is offline. Your data is safe!</p></body></html>',
+                                                    { headers: { 'Content-Type': 'text/html' } }
+                                                );
+                                            }
+                                        });
+                                    })
+                            );
+                        });
+                    `;
+                    navigator.serviceWorker.register('sw.js')
+                      .then(reg => console.log('CineTray PWA: Service Worker registered', reg))
+                      .catch(err => console.error('CineTray PWA: Service Worker registration failed', err));
+
+                    console.log('CineTray PWA: Service Worker registered successfully', registration.scope);
+                    
+                    // Show install prompt after successful SW registration
+                    setTimeout(() => showPWAInstallPrompt(), 2000);
+                    
+                } catch (error) {
+                    console.log('CineTray PWA: Service Worker registration failed', error);
+                    // Even if SW fails, show install prompt for PWA
+                    setTimeout(() => showPWAInstallPrompt(), 1000);
+                }
             });
+        } else {
+            console.log('CineTray PWA: Service Workers not supported');
+            // Show basic PWA install prompt even without SW support
+            setTimeout(() => showPWAInstallPrompt(), 1000);
+        }
+
+        // PWA Install Prompt - Enhanced
+        let deferredPrompt;
+        let installButton;
+        
+        window.addEventListener('beforeinstallprompt', (e) => {
+            console.log('CineTray PWA: Install prompt available');
+            e.preventDefault();
+            deferredPrompt = e;
+            showInstallButton();
+        });
+
+        // Detect if app is already installed
+        window.addEventListener('appinstalled', (e) => {
+            console.log('CineTray PWA: App was installed');
+            hideInstallButton();
+            showNotification('🎉 CineTray installed successfully! Launch from your home screen.');
+        });
+
+        function showInstallButton() {
+            // Add install button to header if not already installed and not already shown
+            if (!window.matchMedia('(display-mode: standalone)').matches && !installButton) {
+                installButton = document.createElement('button');
+                installButton.innerHTML = '📱';
+                installButton.className = 'theme-toggle';
+                installButton.title = 'Install CineTray App';
+                installButton.style.marginLeft = '0.5rem';
+                installButton.onclick = installPWA;
+                
+                document.querySelector('.header-content').appendChild(installButton);
+            }
+        }
+
+        function hideInstallButton() {
+            if (installButton) {
+                installButton.remove();
+                installButton = null;
+            }
+        }
+
+        function installPWA() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('CineTray PWA: User accepted the install prompt');
+                        hideInstallButton();
+                    } else {
+                        console.log('CineTray PWA: User dismissed the install prompt');
+                    }
+                    deferredPrompt = null;
+                });
+            } else {
+                // Fallback for browsers that don't support install prompt
+                showNotification('💡 Add CineTray to your home screen: Menu > Add to Home Screen');
+            }
+        }
+
+        function showPWAInstallPrompt() {
+            // Show notification about PWA capabilities
+            if (!window.matchMedia('(display-mode: standalone)').matches && 
+                !localStorage.getItem('pwa-prompt-shown-v2')) {
+                
+                // Check if we're on Android Chrome (primary TWA target)
+                const isAndroidChrome = /Android/.test(navigator.userAgent) && /Chrome/.test(navigator.userAgent);
+                
+                if (isAndroidChrome) {
+                    showNotification('🚀 Install CineTray as an app! Look for the "Add to Home Screen" option or 📱 button.');
+                } else {
+                    showNotification('💡 Add CineTray to your home screen for a better experience!');
+                }
+                
+                localStorage.setItem('pwa-prompt-shown-v2', 'true');
+            }
+        }
+
+        // TWA (Trusted Web Activity) Detection and Optimization
+        function detectTWA() {
+            // Check if running in TWA environment
+            const isTWA = document.referrer.includes('android-app://') || 
+                         window.matchMedia('(display-mode: standalone)').matches ||
+                         navigator.standalone === true;
+            
+            if (isTWA) {
+                console.log('CineTray: Running in TWA/PWA mode');
+                document.body.classList.add('twa-mode');
+                
+                // Optimize for TWA
+                optimizeForTWA();
+            }
+        }
+
+        function optimizeForTWA() {
+            // Add TWA-specific optimizations
+            const style = document.createElement('style');
+            style.textContent = `
+                .twa-mode {
+                    --header-height: calc(2rem + env(safe-area-inset-top));
+                }
+                
+                .twa-mode .header {
+                    padding-top: calc(1.5rem + env(safe-area-inset-top));
+                }
+                
+                .twa-mode .container {
+                    padding-bottom: calc(0.5rem + env(safe-area-inset-bottom));
+                }
+                
+                /* Hide install button in TWA mode */
+                .twa-mode .theme-toggle[title*="Install"] {
+                    display: none;
+                }
+            `;
+            document.head.appendChild(style);
         }
     </script>
 </body>
