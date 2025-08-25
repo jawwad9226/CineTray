@@ -1,115 +1,349 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>CineTray - Your Personal Watchlist</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CineTray - Your Personal Watchlist</title>
 
-  <!-- PWA meta -->
-  <meta name="theme-color" content="#6366f1" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-title" content="CineTray" />
-  <meta name="application-name" content="CineTray" />
-  <meta name="google-play-app" content="app-id=com.cinetray.watchlist" />
+    <!-- PWA meta -->
+    <meta name="theme-color" content="#6366f1" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="CineTray" />
+    <meta name="application-name" content="CineTray" />
+    <meta name="google-play-app" content="app-id=com.cinetray.watchlist" />
 
-  <!-- Use an external manifest.json (clean) -->
-  <link rel="manifest" href="manifest.json">
+    <!-- External manifest (create manifest.json in repo root) -->
+    <link rel="manifest" href="manifest.json" />
 
-  <!-- Icons (place icon-192.png and icon-512.png in repo root) -->
-  <link rel="icon" href="icon-192.png" sizes="192x192">
-  <link rel="apple-touch-icon" href="icon-192.png">
+    <!-- Icons (place icon files in repo root: icon-192.png, icon-512.png) -->
+    <link rel="icon" href="icon-192.png" sizes="192x192" />
+    <link rel="apple-touch-icon" href="icon-192.png" />
 
-  <style>
-    /* simplified/cleaned CSS; you can paste your original CSS here but
-       make sure the broken @font-face block is removed */
-    * { box-sizing: border-box; }
-    :root { --primary:#6366f1; --bg:#ffffff; --text:#0f172a; --muted:#64748b; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin:0; background:var(--bg); color:var(--text); }
-    .header { background: linear-gradient(135deg,var(--primary), #4f46e5); color:#fff; padding:1.5rem; }
-    .container { max-width:1000px; margin:0 auto; padding:1rem; }
-    .logo { display:flex; align-items:center; gap:.5rem; font-weight:700; font-size:1.2rem; }
-    .stats { display:flex; gap:1rem; margin:1rem 0; }
-    .stat { background:#f8fafc; padding:.8rem 1rem; border-radius:.6rem; border:1px solid #e6eefb; }
-    .controls { background:#f8fafc; padding:1rem; border-radius:.6rem; border:1px solid #e6eefb; margin-bottom:1rem; }
-    .watchlist { display:grid; gap:1rem; }
-    .watchlist-item { background:#fff; border:1px solid #eef2ff; padding:1rem; border-radius:.5rem; }
-    .notification { position:fixed; right:1rem; top:1rem; background:var(--primary); color:#fff; padding:.6rem .9rem; border-radius:.5rem; transform: translateX(120%); transition: transform .3s; }
-    .notification.show { transform: translateX(0); }
-  </style>
+    <style>
+        /* Cleaned CSS - removed broken @font-face that used empty base64 */
+        * { box-sizing: border-box; margin: 0; padding: 0; transition: background-color .25s ease, color .25s ease, border-color .25s ease; }
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --bg: #ffffff;
+            --bg-secondary: #f8fafc;
+            --text: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+        }
+        [data-theme="dark"] {
+            --primary: #818cf8;
+            --primary-dark: #6366f1;
+            --bg: #0f172a;
+            --bg-secondary: #1e293b;
+            --text: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border: #334155;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial; background: var(--bg); color: var(--text); line-height: 1.6; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 1rem; }
+        .header { background: linear-gradient(135deg,var(--primary) 0%,var(--primary-dark) 100%); color: white; padding: 2rem 0; margin-bottom: 2rem; border-radius: 0 0 1rem 1rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+        .header-content { display:flex; justify-content:space-between; align-items:center; gap:1rem; max-width:1200px; margin:0 auto; padding:0 1rem; }
+        .logo { display:flex; align-items:center; gap:.75rem; font-weight:800; font-size:1.6rem; background:linear-gradient(45deg,#fff,#e0e7ff); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+        .theme-toggle { background: rgba(255,255,255,0.15); border:2px solid rgba(255,255,255,0.2); color:white; padding:.6rem; border-radius:12px; cursor:pointer; font-size:1.1rem; }
+        .stats { display:grid; grid-template-columns: 1fr 1fr 1fr; gap:.75rem; margin-bottom:1.5rem; }
+        .stat-card { background: var(--bg-secondary); padding:1rem; border-radius:12px; border:1px solid var(--border); text-align:center; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+        .stat-number { font-size:1.5rem; font-weight:700; color:var(--primary); display:block; }
+        .controls { background:var(--bg-secondary); padding:1.5rem; border-radius:.75rem; margin-bottom:2rem; border:1px solid var(--border); }
+        .input-group { display:flex; gap:.75rem; margin-bottom:1rem; position:relative; }
+        .input-field { flex:1; padding:.9rem 1rem; border:2px solid var(--border); border-radius:12px; font-size:1rem; background:var(--bg); color:var(--text); }
+        .btn-add { padding:.85rem 1rem; border:none; border-radius:12px; background:var(--primary); color:white; cursor:pointer; font-weight:600; font-size:1.15rem; }
+        .filters { display:flex; gap:.5rem; flex-wrap:wrap; }
+        .filter-btn { padding:.6rem 1.2rem; border-radius:25px; border:2px solid var(--border); background:var(--bg); cursor:pointer; font-weight:600; }
+        .filter-btn.active { background:var(--primary); color:white; border-color:var(--primary); transform:scale(1.03); }
+        .watchlist { display:grid; gap:1rem; }
+        .watchlist-item { background:var(--bg-secondary); border:1px solid var(--border); border-radius:.75rem; padding:1.25rem; }
+        .item-title { font-size:1.15rem; font-weight:600; color:var(--primary); text-decoration:none; cursor:pointer; }
+        .item-meta { display:flex; gap:1rem; align-items:center; flex-wrap:wrap; color:var(--text-muted); font-size:.9rem; }
+        .status-badge { padding:.25rem .6rem; border-radius:999px; font-weight:700; font-size:.75rem; }
+        .status-watched { background:#10b981; color:#fff; }
+        .status-to-watch { background:#f59e0b; color:#fff; }
+        .item-actions { display:flex; gap:.5rem; }
+        .action-btn { padding:.5rem; border-radius:.375rem; min-width:2.5rem; height:2.5rem; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+        .btn-watch { background:#10b981; color:white; }
+        .btn-unwatch { background:#f59e0b; color:white; }
+        .btn-delete { background:#ef4444; color:white; }
+        .notification { position:fixed; top:2rem; right:2rem; background:var(--primary); color:white; padding:1rem 1.5rem; border-radius:12px; transform:translateX(100%); transition:all .3s ease; z-index:1000; }
+        .notification.show { transform:translateX(0); }
+        .search-suggestions { position:absolute; top:calc(100% + 6px); left:0; right:0; background:var(--bg); border:1px solid var(--border); border-radius:6px; max-height:210px; overflow:auto; display:none; z-index:100; }
+        .suggestion-item { padding:.6rem .9rem; border-bottom:1px solid var(--border); cursor:pointer; }
+        .suggestion-item:last-child { border-bottom:none; }
+
+        @media (max-width:768px) {
+            .header { padding:1.25rem 0; margin-bottom:1rem; }
+            .logo { font-size:1.4rem; }
+            .stats { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
 <body>
-  <header class="header">
-    <div class="container">
-      <div class="logo">🎬 CineTray</div>
-    </div>
-  </header>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo"><span style="font-size:1.4rem;">🎬</span> CineTray</div>
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">🌙</button>
+        </div>
+    </header>
 
-  <main class="container">
-    <section class="stats">
-      <div class="stat"><div id="totalCount">0</div><small>Total Items</small></div>
-      <div class="stat"><div id="watchedCount">0</div><small>Watched</small></div>
-      <div class="stat"><div id="toWatchCount">0</div><small>To Watch</small></div>
-    </section>
+    <main class="container">
+        <section class="stats">
+            <div class="stat-card">
+                <span class="stat-number" id="totalCount">0</span>
+                <div>Total Items</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" id="watchedCount">0</span>
+                <div>Watched</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" id="toWatchCount">0</span>
+                <div>To Watch</div>
+            </div>
+        </section>
 
-    <section class="controls">
-      <input id="titleInput" placeholder="Enter movie or series title..." style="width:70%;padding:.5rem;border-radius:.4rem;border:1px solid #dbeafe;">
-      <button id="addBtn" style="padding:.5rem 1rem;margin-left:.5rem;border-radius:.4rem;">Add</button>
-    </section>
+        <section class="controls">
+            <div class="input-group">
+                <input id="titleInput" class="input-field" placeholder="Enter movie or series title..." autocomplete="off" aria-label="Title">
+                <div id="suggestions" class="search-suggestions" role="listbox" aria-hidden="true"></div>
+                <button id="addBtn" class="btn-add" title="Add">+</button>
+            </div>
 
-    <section id="watchlist" class="watchlist">
-      <div class="watchlist-item">Your watchlist is empty</div>
-    </section>
-  </main>
+            <div class="filters" role="tablist" aria-label="Filters">
+                <button class="filter-btn active" data-filter="all" role="tab">All</button>
+                <button class="filter-btn" data-filter="to-watch" role="tab">To Watch</button>
+                <button class="filter-btn" data-filter="watched" role="tab">Watched</button>
+            </div>
+        </section>
 
-  <div id="notification" class="notification" role="status" aria-live="polite"></div>
+        <section id="watchlist" class="watchlist" aria-live="polite">
+            <div class="watchlist-item empty-state">
+                <div style="font-weight:600; color:var(--text-muted)">Your watchlist is empty</div>
+                <div style="color:var(--text-muted)">Start adding movies and series to keep track of what you want to watch!</div>
+            </div>
+        </section>
+    </main>
 
-  <script>
-    // --- minimal app logic (keeps your existing behavior) ---
-    let watchlist = JSON.parse(localStorage.getItem('cinetray-watchlist') || '[]');
-    const totalEl = document.getElementById('totalCount');
-    const watchedEl = document.getElementById('watchedCount');
-    const toWatchEl = document.getElementById('toWatchCount');
-    const listEl = document.getElementById('watchlist');
-    const notifyEl = document.getElementById('notification');
+    <div id="notification" class="notification" role="status" aria-live="polite"></div>
 
-    function render() {
-      totalEl.textContent = watchlist.length;
-      watchedEl.textContent = watchlist.filter(i=>i.status==='watched').length;
-      toWatchEl.textContent = watchlist.filter(i=>i.status!=='watched').length;
-      if (watchlist.length === 0) {
-        listEl.innerHTML = '<div class="watchlist-item">Your watchlist is empty</div>';
-        return;
-      }
-      listEl.innerHTML = watchlist.map(i=>`<div class="watchlist-item">${i.title}</div>`).join('');
-    }
-    function show(msg) { notifyEl.textContent = msg; notifyEl.classList.add('show'); setTimeout(()=>notifyEl.classList.remove('show'),2500); }
+    <script>
+        // --- App state & data
+        let watchlist = JSON.parse(localStorage.getItem('cinetray-watchlist') || '[]');
+        let currentFilter = 'all';
 
-    document.getElementById('addBtn').addEventListener('click', ()=> {
-      const val = document.getElementById('titleInput').value.trim();
-      if (!val) { show('Enter a title'); return; }
-      watchlist.unshift({ id: Date.now().toString(36), title: val, status: 'to-watch', dateAdded: new Date().toISOString() });
-      localStorage.setItem('cinetray-watchlist', JSON.stringify(watchlist));
-      document.getElementById('titleInput').value='';
-      render();
-      show(`"${val}" added`);
-    });
+        const sampleMovies = [
+            "The Shawshank Redemption", "The Godfather", "The Dark Knight", "Pulp Fiction",
+            "The Lord of the Rings", "Forrest Gump", "Inception", "Fight Club",
+            "The Matrix", "Goodfellas", "The Empire Strikes Back", "One Flew Over the Cuckoo's Nest",
+            "Se7en", "The Silence of the Lambs", "It's a Wonderful Life", "Schindler's List",
+            "Saving Private Ryan", "The Green Mile", "Interstellar", "Parasite",
+            "Avengers: Endgame", "Titanic", "Avatar", "Black Panther", "Spider-Man: Into the Spider-Verse"
+        ];
 
-    render();
+        // --- Helpers
+        function saveData() {
+            localStorage.setItem('cinetray-watchlist', JSON.stringify(watchlist));
+            updateStats();
+            renderWatchlist();
+        }
 
-    // --- Correct SW registration (no blob/data urls) ---
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js')
-          .then(registration => {
-            console.log('CineTray PWA: Service Worker registered', registration.scope);
-          })
-          .catch(err => {
-            console.error('CineTray PWA: Service Worker registration failed', err);
-          });
-      });
-    } else {
-      console.log('Service workers not supported');
-    }
-  </script>
+        function updateStats() {
+            const total = watchlist.length;
+            const watched = watchlist.filter(i => i.status === 'watched').length;
+            const toWatch = total - watched;
+            document.getElementById('totalCount').textContent = total;
+            document.getElementById('watchedCount').textContent = watched;
+            document.getElementById('toWatchCount').textContent = toWatch;
+        }
+
+        function showNotification(msg) {
+            const n = document.getElementById('notification');
+            n.textContent = msg;
+            n.classList.add('show');
+            setTimeout(() => n.classList.remove('show'), 3000);
+        }
+
+        function generateId() {
+            return Date.now().toString(36) + Math.random().toString(36).slice(2);
+        }
+
+        // --- CRUD
+        function addItem() {
+            const input = document.getElementById('titleInput');
+            const title = input.value.trim();
+            if (!title) { showNotification('Please enter a title'); return; }
+            if (watchlist.some(i => i.title.toLowerCase() === title.toLowerCase())) {
+                showNotification('This title already exists in your watchlist');
+                return;
+            }
+            const item = { id: generateId(), title, status: 'to-watch', dateAdded: new Date().toLocaleDateString(), dateWatched: null };
+            watchlist.unshift(item);
+            input.value = '';
+            hideSuggestions();
+            saveData();
+            showNotification(`"${title}" added to your watchlist!`);
+        }
+
+        function deleteItem(id) {
+            const item = watchlist.find(i => i.id === id);
+            if (!item) return;
+            if (!confirm(`Remove "${item.title}"?`)) return;
+            watchlist = watchlist.filter(i => i.id !== id);
+            saveData();
+            showNotification(`"${item.title}" removed`);
+        }
+
+        function toggleStatus(id) {
+            const it = watchlist.find(i => i.id === id);
+            if (!it) return;
+            if (it.status === 'watched') { it.status = 'to-watch'; it.dateWatched = null; showNotification(`"${it.title}" marked to watch`); }
+            else { it.status = 'watched'; it.dateWatched = new Date().toLocaleDateString(); showNotification(`"${it.title}" marked watched`); }
+            saveData();
+        }
+
+        function openGoogleSearch(title) {
+            const url = `https://www.google.com/search?q=${encodeURIComponent(title + ' movie')}`;
+            window.open(url, '_blank', 'noopener');
+        }
+
+        // --- Render
+        function renderWatchlist() {
+            const el = document.getElementById('watchlist');
+            let items = watchlist.slice();
+            if (currentFilter === 'watched') items = items.filter(i => i.status === 'watched');
+            if (currentFilter === 'to-watch') items = items.filter(i => i.status === 'to-watch');
+
+            items.sort((a, b) => {
+                if (a.status === 'to-watch' && b.status === 'watched') return -1;
+                if (a.status === 'watched' && b.status === 'to-watch') return 1;
+                // dateAdded is localized string; fallback to position if parse fails
+                const da = Date.parse(a.dateAdded) || 0;
+                const db = Date.parse(b.dateAdded) || 0;
+                return db - da;
+            });
+
+            if (items.length === 0) {
+                el.innerHTML = `<div class="watchlist-item"><div style="font-weight:600; color:var(--text-muted)">No items found</div></div>`;
+                return;
+            }
+
+            el.innerHTML = items.map(item => `
+                <div class="watchlist-item" role="article" aria-label="${escapeHtml(item.title)}">
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;">
+                        <div style="flex:1;">
+                            <a href="#" class="item-title" onclick="event.preventDefault(); openGoogleSearch('${escapeForJs(item.title)}')">${escapeHtml(item.title)}</a>
+                            <div class="item-meta">
+                                <span class="status-badge ${item.status === 'watched' ? 'status-watched' : 'status-to-watch'}">${item.status === 'watched' ? 'Watched' : 'To Watch'}</span>
+                                <span class="date-added">Added: ${escapeHtml(item.dateAdded || '')}</span>
+                                ${item.dateWatched ? `<span class="date-added">Watched: ${escapeHtml(item.dateWatched)}</span>` : ''}
+                            </div>
+                        </div>
+                        <div class="item-actions">
+                            <button class="action-btn ${item.status === 'watched' ? 'btn-unwatch' : 'btn-watch'}" onclick="toggleStatus('${item.id}')" title="${item.status === 'watched' ? 'Mark as To Watch' : 'Mark as Watched'}">
+                                ${item.status === 'watched' ? '↶' : '👁️'}
+                            </button>
+                            <button class="action-btn btn-delete" onclick="deleteItem('${item.id}')" title="Delete">🗑️</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // simple escaping helpers for safe injection
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str).replace(/[&<>"']/g, function (m) {
+                return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[m];
+            });
+        }
+        function escapeForJs(s) {
+            return String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\n/g, '\\n').replace(/\r/g, '');
+        }
+
+        // --- Suggestions
+        function showSuggestions(value) {
+            const el = document.getElementById('suggestions');
+            if (!el) return;
+            if (!value.trim()) { el.style.display = 'none'; el.innerHTML = ''; el.setAttribute('aria-hidden', 'true'); return; }
+            const matches = sampleMovies.filter(m => m.toLowerCase().includes(value.toLowerCase()) && !watchlist.some(i => i.title.toLowerCase() === m.toLowerCase())).slice(0, 6);
+            if (matches.length === 0) { el.style.display = 'none'; el.innerHTML = ''; el.setAttribute('aria-hidden', 'true'); return; }
+            el.innerHTML = matches.map(m => `<div class="suggestion-item" role="option" tabindex="0" onclick="selectSuggestion('${escapeForJs(m)}')">${escapeHtml(m)}</div>`).join('');
+            el.style.display = 'block';
+            el.setAttribute('aria-hidden', 'false');
+        }
+
+        function hideSuggestions() {
+            const el = document.getElementById('suggestions');
+            if (el) { el.style.display = 'none'; el.innerHTML = ''; el.setAttribute('aria-hidden', 'true'); }
+        }
+
+        function selectSuggestion(title) {
+            document.getElementById('titleInput').value = title;
+            hideSuggestions();
+        }
+
+        // --- Filters & UI wiring
+        function setFilter(filter) {
+            currentFilter = filter;
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            const btn = document.querySelector(`.filter-btn[data-filter="${filter}"]`);
+            if (btn) btn.classList.add('active');
+            renderWatchlist();
+        }
+
+        // --- Theme toggle
+        function toggleTheme() {
+            const body = document.body;
+            const btn = document.getElementById('themeToggle');
+            if (body.hasAttribute('data-theme')) {
+                body.removeAttribute('data-theme');
+                btn.textContent = '🌙';
+                localStorage.setItem('cinetray-theme', 'light');
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                btn.textContent = '☀️';
+                localStorage.setItem('cinetray-theme', 'dark');
+            }
+        }
+
+        // --- Init
+        document.addEventListener('DOMContentLoaded', () => {
+            // load theme
+            if (localStorage.getItem('cinetray-theme') === 'dark') {
+                document.body.setAttribute('data-theme', 'dark');
+                document.getElementById('themeToggle').textContent = '☀️';
+            }
+
+            // wire controls
+            document.getElementById('addBtn').addEventListener('click', addItem);
+            document.getElementById('titleInput').addEventListener('input', (e) => showSuggestions(e.target.value));
+            document.getElementById('titleInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') addItem(); });
+            document.addEventListener('click', (e) => { if (!e.target.closest('.input-group')) hideSuggestions(); });
+            document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.addEventListener('click', () => setFilter(btn.dataset.filter)));
+
+            updateStats();
+            renderWatchlist();
+        });
+
+        // --- Service Worker registration (static /sw.js) ---
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(registration => {
+                        console.log('CineTray PWA: Service Worker registered', registration.scope);
+                    })
+                    .catch(err => {
+                        console.error('CineTray PWA: Service Worker registration failed', err);
+                    });
+            });
+        } else {
+            console.log('CineTray PWA: Service Workers not supported');
+        }
+    </script>
 </body>
 </html>
