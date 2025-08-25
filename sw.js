@@ -1,9 +1,11 @@
 const CACHE_NAME = 'cinetray-v1.3';
 const STATIC_CACHE_URLS = [
-  '/CineTray/',
-  '/CineTray/index.html',
-  '/CineTray/manifest.json',
-  '/CineTray/sw.js'
+  '/',
+  '/index.html',
+  '/manifest.json',
+  '/sw.js',
+  '/icon-192.png',
+  '/icon-512.png'
 ];
 
 // Install event - cache static assets
@@ -51,7 +53,7 @@ self.addEventListener('fetch', (event) => {
       .catch(() => {
         // If network fails, try to get from cache
         return caches.match(event.request)
-          .then(response => response || caches.match('/CineTray/index.html'));
+          .then(response => response || caches.match('/index.html'));
       })
   );
 });
