@@ -1,4 +1,4 @@
-const CACHE_NAME = 'cinetray-v1.6';
+const CACHE_NAME = 'cinetray-v1.7';
 const BASE_PATH = '/CineTray/';
 const STATIC_CACHE_URLS = [
     BASE_PATH,

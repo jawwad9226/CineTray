@@ -2,8 +2,8 @@
   "name": "CineTray",
   "short_name": "CineTray",
   "description": "Track and manage your movie and TV show watchlist",
-  "start_url": "/?source=pwa",
-  "scope": "/",
+  "start_url": "/CineTray/?source=pwa",
+  "scope": "/CineTray/",
   "display": "standalone",
   "display_override": ["window-controls-overlay", "standalone", "browser"],
   "orientation": "portrait",
@@ -19,14 +19,14 @@
       "name": "Add New Movie",
       "short_name": "Add Movie",
       "description": "Add a new movie to your watchlist",
-      "url": "/add?source=pwa",
+      "url": "/CineTray/add?source=pwa",
       "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
     },
     {
       "name": "View Watchlist",
       "short_name": "Watchlist",
       "description": "View your watchlist",
-      "url": "/watchlist?source=pwa"
+      "url": "/CineTray/watchlist?source=pwa"
     }
   ],
   "icons": [
@@ -53,7 +53,7 @@
   "protocol_handlers": [],
   "file_handlers": [],
   "share_target": {
-    "action": "/share",
+    "action": "/CineTray/share",
     "method": "GET",
     "enctype": "application/x-www-form-urlencoded",
     "params": {
@@ -70,5 +70,5 @@
     "navigate_existing_client": "always"
   },
   "handle_links": "preferred",
-  "id": "/?source=pwa"
+  "id": "/CineTray/?source=pwa"
 }
