@@ -21,15 +21,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Generate config.js from secrets
+      - name: Generate config.js from secrets (JSON-safe)
+        shell: bash
         run: |
-          cat > config.js << 'EOF'
-          window.ENV = {
-            SUPABASE_URL: '${{ secrets.SUPABASE_URL }}',
-            SUPABASE_ANON_KEY: '${{ secrets.SUPABASE_ANON_KEY }}',
-            TMDB_API_KEY: '${{ secrets.TMDB_API_KEY }}'
-          };
-          EOF
+          sudo apt-get update -y && sudo apt-get install -y jq
+          echo "window.ENV = $(jq -n \
+            --arg SUPABASE_URL       "${{ secrets.SUPABASE_URL }}" \
+            --arg SUPABASE_ANON_KEY  "${{ secrets.SUPABASE_ANON_KEY }}" \
+            --arg TMDB_API_KEY       "${{ secrets.TMDB_API_KEY }}" \
+            '{SUPABASE_URL:$SUPABASE_URL, SUPABASE_ANON_KEY:$SUPABASE_ANON_KEY, TMDB_API_KEY:$TMDB_API_KEY}')" > config.js
+          echo "Generated config.js:" && head -n 1 config.js
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
