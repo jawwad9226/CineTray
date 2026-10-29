@@ -19,14 +19,14 @@
       "name": "Add New Movie",
       "short_name": "Add Movie",
       "description": "Add a new movie to your watchlist",
-      "url": "/CineTray/add?source=pwa",
+      "url": "/CineTray/?source=pwa&action=add",
       "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
     },
     {
       "name": "View Watchlist",
       "short_name": "Watchlist",
       "description": "View your watchlist",
-      "url": "/CineTray/watchlist?source=pwa"
+      "url": "/CineTray/?source=pwa&view=watchlist"
     }
   ],
   "icons": [
@@ -53,7 +53,7 @@
   "protocol_handlers": [],
   "file_handlers": [],
   "share_target": {
-    "action": "/CineTray/share",
+    "action": "/CineTray/?source=pwa&action=share",
     "method": "GET",
     "enctype": "application/x-www-form-urlencoded",
     "params": {

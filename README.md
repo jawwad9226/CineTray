@@ -14,7 +14,6 @@ Enhanced Features:
 
 ✅ Duplicate Detection - Warns if movie already exists
 ✅ Auto-Suggestions - Suggests popular movies while typing
-✅ Bulk Actions - Select multiple items for batch operations
 ✅ Dark/Light Mode - Toggle between themes with smooth animations
 ✅ Statistics Dashboard - Live counts of total/watched/to-watch items
 ✅ Smart Filtering - Filter by All/Watched/To Watch
@@ -42,7 +41,6 @@ Add Items: Type movie/series names, get suggestions, press Enter or click Add
 Mark as Watched: Click the eye icon to toggle watched status
 Search Info: Click any title to Google search for reviews/trailers
 Filter: Use filter buttons to view All/Watched/To Watch items
-Bulk Actions: Toggle bulk mode to select multiple items
 Theme: Click moon/sun icon to switch between dark/light modes
 
 📱 Android Optimization:
