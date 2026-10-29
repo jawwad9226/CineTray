@@ -21,58 +21,84 @@ const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let currentUser = null;
 
+function deletedWatchlistKey() {
+    return `cinetray-deleted-watchlist-${currentUser?.id || 'anonymous'}`;
+}
+
+function readDeletedItems() {
+    try {
+        const stored = JSON.parse(localStorage.getItem(deletedWatchlistKey()) || '{}');
+        return stored && typeof stored === 'object' && !Array.isArray(stored) ? stored : {};
+    } catch (error) {
+        console.warn('Invalid deletion queue; starting with an empty queue.', error);
+        localStorage.removeItem(deletedWatchlistKey());
+        return {};
+    }
+}
+
+function writeDeletedItems(items) {
+    localStorage.setItem(deletedWatchlistKey(), JSON.stringify(items));
+}
+
+function showLoginError(message) {
+    const errorEl = document.getElementById('login-error');
+    if (errorEl) errorEl.textContent = message;
+    showNotification(message, 'error');
+}
+
 async function loginOrSignUp(email) {
-    if (!email) {
-        showNotification('Please enter a valid email.', 'error');
+    const emailInput = document.getElementById('emailInput');
+    const loginButton = document.getElementById('loginButton');
+    const normalizedEmail = email.trim().toLowerCase();
+
+    if (!emailInput.checkValidity() || !normalizedEmail) {
+        showLoginError('Please enter a valid email address.');
         return;
     }
 
-    // 1. Check if user exists
-    let { data: user, error } = await supabaseClient
-        .from('users')
-        .select('id, email')
-        .eq('email', email)
-        .maybeSingle(); // avoids 406 when no row
+    loginButton.disabled = true;
+    loginButton.textContent = 'Signing in...';
+    showLoginError('');
 
-    if (error) {
-        console.error('Error checking user:', error);
-        showNotification('Error logging in. Please try again.', 'error');
-        return;
-    }
-
-    // 2. If user doesn't exist, create them
-    if (!user) {
-        let { data: newUser, error: insertError } = await supabaseClient
+    try {
+        let { data: user, error } = await supabaseClient
             .from('users')
-            .insert({ email: email })
             .select('id, email')
-            .single();
+            .eq('email', normalizedEmail)
+            .maybeSingle();
 
-        if (insertError) {
-            console.error('Error creating user:', insertError);
-            showNotification('Error creating account. Please try again.', 'error');
-            return;
+        if (error) throw error;
+
+        if (!user) {
+            const { data: newUser, error: insertError } = await supabaseClient
+                .from('users')
+                .insert({ email: normalizedEmail })
+                .select('id, email')
+                .single();
+
+            if (insertError) throw insertError;
+            user = newUser;
+            showNotification(`Welcome! Your account for ${normalizedEmail} has been created.`, 'success');
+        } else {
+            showNotification(`Welcome back, ${normalizedEmail}!`, 'success');
         }
-        user = newUser;
-        showNotification(`Welcome! Your account for ${email} has been created.`);
-    } else {
-        showNotification(`Welcome back, ${email}!`);
+
+        localStorage.setItem('cinetray-user', JSON.stringify(user));
+        currentUser = user;
+
+        document.getElementById('login-modal').style.display = 'none';
+        document.body.style.overflow = 'auto';
+
+        await syncFromSupabase();
+        await syncToSupabase();
+        renderWatchlist();
+    } catch (error) {
+        console.error('Login failed:', error);
+        showLoginError('Unable to sign in right now. Check your connection and try again.');
+    } finally {
+        loginButton.disabled = false;
+        loginButton.textContent = 'Login';
     }
-
-    // 3. Store user locally and start the app
-    localStorage.setItem('cinetray-user', JSON.stringify(user));
-    currentUser = user;
-    
-    // Hide login and initialize main app
-    document.getElementById('login-modal').style.display = 'none';
-    document.body.style.overflow = 'auto';
-
-    // Initial data sync
-    await syncFromSupabase();
-    await syncToSupabase(); // Sync any offline changes made before login
-    
-    // Render the watchlist with potentially merged data
-    renderWatchlist();
 }
 
 function logout() {
@@ -88,7 +114,15 @@ function logout() {
 function checkUser() {
     const user = localStorage.getItem('cinetray-user');
     if (user) {
-        currentUser = JSON.parse(user);
+        try {
+            currentUser = JSON.parse(user);
+        } catch (error) {
+            console.warn('Invalid saved user; showing login.', error);
+            localStorage.removeItem('cinetray-user');
+            currentUser = null;
+        }
+    }
+    if (currentUser) {
         document.getElementById('login-modal').style.display = 'none';
         document.body.style.overflow = 'auto';
         // Sync data on load
@@ -106,8 +140,8 @@ async function syncToSupabase() {
         return; // Don't sync if offline or not logged in
     }
 
-    const localWatchlist = JSON.parse(localStorage.getItem('cinetray-watchlist') || '[]');
-    if (localWatchlist.length === 0) return; // Nothing to sync
+    const localWatchlist = Array.isArray(watchlist) ? watchlist : [];
+    const deletedItems = readDeletedItems();
 
     const recordsToUpsert = localWatchlist.map(item => ({
         user_id: currentUser.id,
@@ -116,20 +150,38 @@ async function syncToSupabase() {
             title: item.title,
             status: item.status,
             dateAdded: item.dateAdded,
-            dateWatched: item.dateWatched
+            dateWatched: item.dateWatched,
+            updatedAt: item.updatedAt || new Date().toISOString()
         }
     }));
 
-    const { error } = await supabaseClient
-        .from('watchlist')
-        .upsert(recordsToUpsert, { onConflict: 'user_id, movie_id' });
+    if (recordsToUpsert.length) {
+        const { error } = await supabaseClient
+            .from('watchlist')
+            .upsert(recordsToUpsert, { onConflict: 'user_id, movie_id' });
 
-    if (error) {
-        console.error('Error syncing to Supabase:', error);
-        showNotification('Could not sync data to cloud.', 'error');
-    } else {
-        console.log('Data successfully synced to Supabase.');
+        if (error) {
+            console.error('Error syncing to Supabase:', error);
+            showNotification('Could not sync data to cloud.', 'error');
+            return;
+        }
     }
+
+    const deletedIds = Object.keys(deletedItems);
+    if (deletedIds.length) {
+        const { error } = await supabaseClient
+            .from('watchlist')
+            .delete()
+            .eq('user_id', currentUser.id)
+            .in('movie_id', deletedIds);
+        if (error) {
+            console.error('Error syncing deleted items:', error);
+            showNotification('Could not sync deleted items to cloud.', 'error');
+            return;
+        }
+        writeDeletedItems({});
+    }
+    console.log('Data successfully synced to Supabase.');
 }
 
 
@@ -148,27 +200,37 @@ async function syncFromSupabase() {
         return;
     }
 
-    let localWatchlist = JSON.parse(localStorage.getItem('cinetray-watchlist') || '[]');
-    
-    // Simple merge strategy: remote data overwrites local if there's a conflict.
-    // A more robust strategy would use timestamps to see which is newer.
+    const localWatchlist = Array.isArray(watchlist) ? watchlist : [];
+    const deletedItems = readDeletedItems();
     const remoteItems = remoteWatchlist.map(item => ({
         id: item.movie_id,
         ...item.movie_data
     }));
 
-    // Create a map of local items for quick lookup
     const localItemsMap = new Map(localWatchlist.map(item => [item.id, item]));
+    remoteItems.forEach(remoteItem => {
+        const localItem = localItemsMap.get(remoteItem.id);
+        const deletedAt = deletedItems[remoteItem.id];
+        const remoteUpdatedAt = new Date(remoteItem.updatedAt || 0).getTime();
+        const localUpdatedAt = new Date(localItem?.updatedAt || 0).getTime();
 
-    // Merge remote items into the map
-    remoteItems.forEach(item => {
-        localItemsMap.set(item.id, item);
+        if (deletedAt && remoteUpdatedAt <= new Date(deletedAt).getTime()) {
+            localItemsMap.delete(remoteItem.id);
+            return;
+        }
+        delete deletedItems[remoteItem.id];
+        if (!localItem || remoteUpdatedAt > localUpdatedAt) {
+            localItemsMap.set(remoteItem.id, remoteItem);
+        }
     });
 
-    // Convert map back to array
+    Object.keys(deletedItems).forEach(id => localItemsMap.delete(id));
     watchlist = Array.from(localItemsMap.values());
-    
-    saveData(); // Save the merged list locally
+    writeDeletedItems(deletedItems);
+    localStorage.setItem('cinetray-watchlist', JSON.stringify(watchlist));
+    updateStats();
+    renderWatchlist();
+    await syncToSupabase();
     console.log('Data successfully synced from Supabase.');
 }
 

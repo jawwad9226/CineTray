@@ -1,4 +1,4 @@
-const CACHE_NAME = 'cinetray-v1.7';
+const CACHE_NAME = 'cinetray-v1.8';
 const BASE_PATH = '/CineTray/';
 const STATIC_CACHE_URLS = [
     BASE_PATH,
@@ -6,6 +6,9 @@ const STATIC_CACHE_URLS = [
     `${BASE_PATH}manifest.json`,
     `${BASE_PATH}sw.js`,
     `${BASE_PATH}app.js`,
+    `${BASE_PATH}config.js`,
+    `${BASE_PATH}js/auth.js`,
+    `${BASE_PATH}js/pwa.js`,
     `${BASE_PATH}favicon.ico`,
     `${BASE_PATH}icon-192.png`,
     `${BASE_PATH}icon-512.png`,

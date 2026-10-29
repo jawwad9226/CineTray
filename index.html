@@ -19,13 +19,10 @@
     
     <!-- Favicon and App Icons -->
     <link rel="icon" href="favicon.ico" sizes="any">
-    <!-- Removed broken SVG icon reference; PNG icons are used -->
-    <!-- <link rel="icon" type="image/svg+xml" href="icon.svg"> -->
     <link rel="apple-touch-icon" href="icon-192.png">
     
     <!-- PWA Splash Screens -->
     <meta name="apple-mobile-web-app-status-bar" content="#6366f1">
-    <link rel="apple-touch-startup-image" href="splash.png">
     <!-- duplicate manifest link removed; single manifest is declared above -->
     <!-- <link rel="manifest" href="manifest.json" crossorigin="use-credentials"> -->
     
@@ -467,21 +464,23 @@
 
         .notification {
             position: fixed;
-            top: 2rem;
-            right: 2rem;
+            top: 1.25rem;
+            left: 50%;
             background: var(--primary);
             color: white;
             padding: 1rem 1.5rem;
             border-radius: 12px;
             box-shadow: var(--shadow-lg);
-            z-index: 1000;
-            transform: translateX(100%);
+            z-index: 3000;
+            max-width: min(90vw, 520px);
+            text-align: center;
+            transform: translate(-50%, -180%);
             transition: all 0.3s ease;
             backdrop-filter: blur(10px);
         }
 
         .notification.show {
-            transform: translateX(0);
+            transform: translate(-50%, 0);
         }
 
         .notification.error {
@@ -673,6 +672,13 @@
             color: var(--text-secondary);
         }
 
+        .login-error {
+            min-height: 1.5rem;
+            margin: -0.25rem 0 0.75rem;
+            color: var(--danger);
+            font-size: 0.875rem;
+        }
+
         .login-input {
             width: 100%;
             padding: 0.75rem 1rem;
@@ -706,6 +712,7 @@
             <h2>Welcome to CineTray</h2>
             <p>Enter your email to login or sign up.</p>
             <input type="email" id="emailInput" class="login-input" placeholder="your@email.com">
+            <div id="login-error" class="login-error" role="alert" aria-live="polite"></div>
             <button id="loginButton" class="btn-login">Login</button>
         </div>
     </div>
